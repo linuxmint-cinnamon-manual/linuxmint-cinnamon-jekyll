@@ -1,0 +1,109 @@
+    <h2 id="toc43"><a id="RefHeading15281713816058"></a><a id="bkmRefHeading15281713816058"></a><a id="toc42"></a><a id="bkmtoc42"></a><a id="RefHeading12541136957987"></a><a id="bkmRefHeading12541136957987"></a><a id="bkmRefHeading12541136957987"></a><a id="bkmbkmRefHeading12541136957987"></a>Секция Администрирование</h2>
+    <p class="Textbody">Наступает волнующий момент — среди штатных настроек Cinnamon'а осталась одна секция --Администрирование, а в ней — четыре модуля:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">Источники приложений; </p>
+      </li>
+      <li>
+        <p class="Textbody">Менеджер драйверов; </p>
+      </li>
+      <li>
+        <p class="Textbody">Окно входа в систему; </p>
+      </li>
+      <li>
+        <p class="Textbody">Пользователи и группы. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Первые два модуля прямого отношения к Cinnamon не имеют, а принадлежат к кругу фирменных утилит Mint, которые будут предметом соответствующего очерка. Так что в очерке этом будут рассмотрены два последних.</p>
+    <h3 id="toc44"><a id="RefHeading15301713816058"></a><a id="bkmRefHeading15301713816058"></a><a id="toc43"></a><a id="bkmtoc43"></a><a id="RefHeading3861136957987"></a><a id="bkmRefHeading3861136957987"></a><a id="bkmRefHeading3861136957987"></a><a id="bkmbkmRefHeading3861136957987"></a>Окно входа в систему</h3>
+    <p class="Textbody">Строго говоря этот модуль тоже не часть среды Cinnamon, а является инструментом настройки дисплейного менеджера MDM (изначально аббревиатура Mint Display Manager, ныне превратившаяся в рекурсивное MDM Display Manager), обеспечивающего во всех редакциях дистрибутива Mint авторизацию в системе. Однако он очень тесно интегрирован в Системные настройки, в том числе и в отношении внешнего вида, и потому его целесообразно рассмотреть здесь.</p>
+    <p class="Textbody">Поскольку авторизация в системе выходит за пределы компетенции отдельного пользователя, при запуске этого модуля (из CLI его можно запустить командой sudo mdmsetup) для начала запрашивается пароль, после ввода которого появляется такая панель:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_068.png">
+        <img alt="Изображение144" class="frameGraphics" id="144graphic" src="http://alv.me/wp-content/img/im_cin_img/param_068-572x386.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:387.8463px" />
+      </a>
+      <a id="a144graphic"></a>
+      <a id="bkm144graphic"></a>
+      <a href="http://alv.me/wp-content/img/2014/12/param_068.png"> </a>
+    </p>
+    <p class="Textbody">С пунктом Тема всё понятно — это выбор заставки, на фоне которой выводится окно авторизации, а также, при желании, определение собственного приветствия:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_069.png">
+        <img alt="Изображение145" class="frameGraphics" id="145graphic" src="http://alv.me/wp-content/img/im_cin_img/param_069-572x481.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:482.82584px" />
+      </a>
+      <a id="a145graphic"></a>
+      <a id="bkm145graphic"></a>
+    </p>
+    <p class="Textbody">Далее можно задать автоматический вход в систему для определённого пользователя, и установить задержку перед входом, позволяющую выбрать сеанс:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_070.png">
+        <img alt="Изображение146" class="frameGraphics" id="146graphic" src="http://alv.me/wp-content/img/im_cin_img/param_070-572x386.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:387.8463px" />
+      </a>
+      <a id="a146graphic"></a>
+      <a id="bkm146graphic"></a>
+    </p>
+    <p class="Textbody">Сеанс по умолчанию задаётся в пункте Настройки:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_071.png">
+        <img alt="Изображение147" class="frameGraphics" id="147graphic" src="http://alv.me/wp-content/img/im_cin_img/param_071-572x386.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:387.8463px" />
+      </a>
+      <a id="a147graphic"></a>
+      <a id="bkm147graphic"></a>
+    </p>
+    <p class="Textbody">Здесь же есть вожделенная для начинающих линуксоидов опция — разрешение авторизоваться в иксовом сеансе в качестве суперпользователя. Что, конечно, круто, но делать не рекомендуется, за исключением единичных ну очень специальных случаев.</p>
+    <h3 id="toc45"><a id="RefHeading15321713816058"></a><a id="bkmRefHeading15321713816058"></a><a id="toc44"></a><a id="bkmtoc44"></a><a id="RefHeading3881136957987"></a><a id="bkmRefHeading3881136957987"></a><a id="bkmRefHeading3881136957987"></a><a id="bkmbkmRefHeading3881136957987"></a>Пользователи и группы</h3>
+    <p class="Textbody">А вот модуль Пользователи и группы — родной для Cinnamon, из CLI его можно запустить командой cinnamon-settings-users. Очевидно, что и здесь потребуется пароль, ввод которого даст доступ к святая святых — списку пользователей и групп:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_072.png">
+        <img alt="Изображение148" class="frameGraphics" id="148graphic" src="http://alv.me/wp-content/img/im_cin_img/param_072-572x406.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:407.84003px" />
+      </a>
+      <a id="a148graphic"></a>
+      <a id="bkm148graphic"></a>
+    </p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_073.png">
+        <img alt="Изображение149" class="frameGraphics" id="149graphic" src="http://alv.me/wp-content/img/im_cin_img/param_073-572x406.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:407.84003px" />
+      </a>
+      <a id="a149graphic"></a>
+      <a id="bkm149graphic"></a>
+    </p>
+    <p class="Textbody">От описания возможных тут действий в каждом аккаунте позволю себе воздержаться — они почти очевидны из скриншота и становятся более чем очевидными после пары щелчков мышью. А вот о том, как создаётся новый пользовательский аккаунт, скажу чуть подробнее.</p>
+    <p class="Textbody">Собственно, для создания аккаунта достаточно заполнить простую форму, выбрав в ней тип учётной записи:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_074.png">
+        <img alt="Изображение150" class="frameGraphics" id="150graphic" src="http://alv.me/wp-content/img/im_cin_img/param_074.png" style="border:1.0px solid #000080;padding:0;width:365.84946px;height:197.84943px" />
+      </a>
+      <a id="a150graphic"></a>
+      <a id="bkm150graphic"></a>
+    </p>
+    <p class="Textbody">Тут возможно два варианта — Администратор и Стандартный. Второй выводится по умолчанию — и пусть таковым остаётся (почему — скажу чуть позже). Так что теперь достаточно нажать кнопку Добавить, чтобы новый пользователь появился в списке оных:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_075.png">
+        <img alt="Изображение151" class="frameGraphics" id="151graphic" src="http://alv.me/wp-content/img/im_cin_img/param_075-572x382.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:383.84px" />
+      </a>
+      <a id="a151graphic"></a>
+      <a id="bkm151graphic"></a>
+    </p>
+    <p class="Textbody">Обращаю внимание, что пароль в ходе создания нового аккаунта не запрашивается. Его можно установить здесь же, щёлкнув на поле Пароль:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_076.png">
+        <img alt="Изображение152" class="frameGraphics" id="152graphic" src="http://alv.me/wp-content/img/im_cin_img/param_076.png" style="border:1.0px solid #000080;padding:0;width:414.83212px;height:253.82425px" />
+      </a>
+      <a id="a152graphic"></a>
+      <a id="bkm152graphic"></a>
+    </p>
+    <p class="Textbody">Впрочем, я по ряду причин предпочитаю делать это из CLI командой</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo passwd username</span> </p>
+    <p class="Textbody">Только после этого надо не забыть исключить пользователя из группы nopasswdlogin, членство в которой даёт возможность беспарольного входа в систему, что не есть правильно. Для этого достаточно щёлкнуть мышью на поле Группы и снять отметку с соответствующего боксика:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2014/12/param_077.png">
+        <img alt="Изображение153" class="frameGraphics" id="153graphic" src="http://alv.me/wp-content/img/im_cin_img/param_077.png" style="border:1.0px solid #000080;padding:0;width:245.84944px;height:481.84317px" />
+      </a>
+      <a id="a153graphic"></a>
+      <a id="bkm153graphic"></a>
+    </p>
+    <p class="Textbody">Здесь, во-первых, надо подчеркнуть, что беспарольный вход в систему — это совсем не то же самое, что автоматический вход, о котором говорилось выше: во-втором случае пароль пользователя существует, просто его не нужно вводить в окошке MDM (это, в соответствие с названием, делается автоматически, за кадром). А вот при авторизации в консоли этому самому «автоматическому» пользователю пароль вводить придётся. Как и при запуске программ, требующих прав администратора. И, чтобы ни говорили записные параноики, с точки зрения безопасности на локальной машине, находящейся в индивидуальном пользовании, автоматический вход ничем не отличается от парольного.</p>
+    <p class="Textbody">Во-вторых, поясняю, в чём отличие административного типа учётной записи от стандартного: только пользователь с аккаунтом первого типа имеет возможность получить доступ к административным привилегиям с помощью команды sudo. Административный статус автоматически присваивается тому пользователю, чей аккаунт был создан при инсталляции системы. Так что для всех остальных аккаунтов достаточно статуса стандартного. Ибо зачем нам два генеральных секретаря? — резонно говорил незабвенный Леонид Ильич (правда, не в жизни, а в анекдоте)</p>
+    <p class="Textbody">И в-третьих, может возникнуть вопрос, зачем на индивидуальной машине несколько аккаунтов? Причины могут быть разные, скажу только за себя. Мой первый и главный аккаунт, alv, предназначен для меня, любимого, когда он занят выполнением своей непосредственной работы. Например, сочинением этой книжки.</p>
+    <p class="Textbody">Никаких потенциально опасных действий я под основным аккаунтом не делаю (или стараюсь не делать). Для всякого рода экспериментов предназначен аккаунт exp, пользователь которого не имеет доступа к правам администратора и потому напортачить на системном уровне не может — в его власти только развалить собственные пользовательские настройки. Поскольку такое рано или поздно случается — на помощь приходит аккаунт def, в котором сохраняются все настройки по умолчанию. И из которого настройки несчастного exp можно восстановить до исходного состояния простым копированием конфигов.</p>
+    <p class="Textbody">На этом разговор о настройках Mint совместно с Cinnamon можно считать законченным. Следующий очерк имеет отношение только к Mint, так как посвящён «фирменному» иснтсрументарию этого дистрибутива — и не только имеющему отношение к настройкам.</p>
