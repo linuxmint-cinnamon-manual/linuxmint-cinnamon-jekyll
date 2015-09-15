@@ -52,3 +52,15 @@ Then:
     cd source/
     reverse_markdown 10_mint_utils.html > md/10_mint_utils.md
 
+Tips:
+
+Edit MarkDown file in Gedit.
+
+Disable `Ctrl+D` (what delete line), in `~/.gtkrc-2.0`:
+
+```
+binding "override-ctrl-d" {
+    unbind "<ctrl>d"
+}
+class "GeditView" binding :highest "override-ctrl-d"
+```
