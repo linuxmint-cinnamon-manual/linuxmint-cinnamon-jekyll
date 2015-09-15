@@ -24,6 +24,7 @@ exclude:
   - configs/
   - _site
   - doc_multi*
+  - source/
 
 # same for all
 host: 127.0.0.1

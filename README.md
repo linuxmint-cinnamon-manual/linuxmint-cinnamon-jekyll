@@ -28,7 +28,7 @@ index.md
 03_cinnamon_intro.md
 ...
 
-Then:
+Then (for Vagrant/shared folder):
 
 ```bash
 jekyll serve -H 0.0.0.0 - --force_polling
