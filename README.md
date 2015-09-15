@@ -1,6 +1,7 @@
 # Manual for Linux Mint Cinnamon
 
-* editor http://markable.in/editor/
+Online: http://linuxmint-cinnamon-manual.github.io/
+
 * theme http://idratherbewriting.com/documentation-theme-jekyll/
 * book based on: http://alv.me/wp-content/lib/Alexey_Alv_Fedorchuk_Linux_Mint_i_ego_Cinnamon.html.zip
 
