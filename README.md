@@ -41,3 +41,13 @@ Config:
 Installation:
 
 http://idratherbewriting.com/documentation-theme-jekyll/doc_getting_started.html
+
+Html to markdown (ruby's gem):
+
+    gem install reverse_markdown
+
+Then:
+
+    cd source/
+    reverse_markdown 10_mint_utils.html > md/10_mint_utils.md
+

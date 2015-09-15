@@ -1,0 +1,166 @@
+    <h2 id="toc121"><a id="RefHeading16841713816058"></a><a id="bkmRefHeading16841713816058"></a><a id="toc120"></a><a id="bkmtoc120"></a><a id="RefHeading12721136957987"></a><a id="bkmRefHeading12721136957987"></a><a id="bkmRefHeading12721136957987"></a><a id="bkmbkmRefHeading12721136957987"></a>Репозитории: введение</h2>
+    <p class="Textbody">Пакеты, входящие в дистрибутив (или, если угодно, образующие дистрибутив), валяются не абы как — они организованы в репозитории. Что это такое?</p>
+    <p class="Textbody">В переводе на русский язык слово репозиторий означает хранилище — и именно его рекомендуют употреблять языковые пуристы (они же те, кто предпочитает называть себя grammar nazi). Однако, как это обычно бывает по жизни, в народе утвердилось иное их именование — repo или, говоря по нашему, по <span style="text-decoration:line-through">бразильскому</span> кириллическому, репы. Почему во множественном числе — станет понятно из дальнейшего рассказа.</p>
+    <p class="Textbody">Сам по себе репозиторий действительно можно в первом приближении определить как место хранения пакетов, специально собранных для данного дистрибутива, к которому возможен свободный (мы ведь ведём речь только о свободных системах) доступ.</p>
+    <p class="Textbody">Однако доступности сервера, хранящего пакеты, недостаточно, чтобы носить звание репозитория. Пакеты в репозитории должны быть структурированы по определённым, присущим данному дистрибутиву, принципам. Система хранения пакетов должна обеспечивать их пополнение, обновление, а главное — поддержку целостности и непротиворечивости пакетов в отношении зависимостей, причём для всех поддерживаемых на текущий момент версий дистрибутива.</p>
+    <p class="Textbody">Иными словами, пакеты в репозитории должны сопровождаться базами данных — теми самыми, которые используются системой управления пакетами данного дистрибутива.</p>
+    <p class="Textbody">Кроме того, весьма желательно, чтобы репозиторий зеркалировался на нескольких независимых серверах — по вполне понятным причинам. Правда, это не является непременным требованием. Тем не менее, наличие зеркал — одно из оснований для употребления слова репозитории во множественном числе.</p>
+    <p class="Textbody">В последние годы получила распространение точка зрения, что право на гордое имя настоящего дистрибутива даёт только собственный репозиторий пакетов, при его отсутствии ты в лучшем случае ремикс дрожащая, а то и вообще жалкий респин. Причём дистрибутив, претендующий на всенародную любовь, обязан иметь репозиторий тем более всеобъёмлющий, чем шире его претензии.</p>
+    <p class="Textbody">Автор этих строк и сам активно поддерживает озвученный взгляд. Однако Mint, казалось бы, служит живым его опровержением. Ибо в базовой своей части, начиная с ядра и заканчивая Xorg, он не просто основывается на репозиториях Ubuntu, подобно тому, как последняя основывается на репозиториях Debian ветки testing. Нет, Mint просто напрямую использует соответствующие пакеты из официального репозитория Ubuntu, без всяких модификаций, патчей, пересборок и тому подобных архитектурных излишеств. Нет, Mint, конечно, имеет и собственный репозиторий, но он выглядит песчинкой по сравнению с глыбой репозиториев прародительской системы.</p>
+    <p class="Textbody">И, тем не менее в звании дистрибутива Mint никто и никогда даже не пытался отказывать. Почему? Да потому, что репозиторий его, что называется, мад, да удал: в нём поддерживаются пакеты, определяющие своеобразие дистрибутива, такие, как «фирменные» утилиты, рабочие среды Cinnamon и MATE. Причём если для MATE репозиторий Mint является как бы вторичным по отношению к «головному» репозиторию <a href="http://pub.mate-desktop.org/releases/" target="_blank">проекта mate-desktop.org</a>, то <a href="https://github.com/linuxmint/" target="_blank">соответствующий репозиторий Cinnamon</a> выступает самым что ни на есть «головным» для этой среды и всех связанных с ней пакетов (вроде файлового менеджера Nemo). И, само собой, таковым он является и для всех дистрибутив-специфичных пакетов — дисплейного менеджера MDM и комплекса Mint-утилит. Ну а что разработчики Mint не занимаются пересборкой базовых пакетов из репозиториев Ubuntu — вполне понятно: зачем изобретать велосипед, когда имеющийся вполне пригоден для езды. Это позволяет сконцентрировать силы на развитии «генеральной линии» собственной системы.</p>
+    <p class="Textbody">Пояснение: под «головным» репозиторием я понимаю то, что на вражьей мове называется upstream: они поддерживаются основной командой данного пакета или комплекса пакетов, в них хранятся исходники их текущих и разрабатываемых версий, туда же вливаются (или, по крайней мере, должны вливаться) патчи от независимых разработчиков. И на них основываются сборки бинарных пакетов для всех дистрибутивов, испытывающих необходимость в оных.</p>
+    <p class="Textbody">В ближайших разделах будет последовательно рассмотрено устройство базового репозитория Ubuntu, а затем собственного репозитория Mint. Кроме этих официальных репозиториев, в Mint могут быть использованы пакеты из PPA-репозиториев Ubuntu, собираемые для этого дистрибутива независимыми майнтайнерами. Так что и них будет сказано под занавес.</p>
+    <h3 id="toc122"><a id="RefHeading16861713816058"></a><a id="bkmRefHeading16861713816058"></a><a id="toc121"></a><a id="bkmtoc121"></a><a id="RefHeading5241136957987"></a><a id="bkmRefHeading5241136957987"></a><a id="bkmRefHeading5241136957987"></a><a id="bkmbkmRefHeading5241136957987"></a>Устройство репозиториев Ubuntu</h3>
+    <p class="Textbody">Официальные репозитории Ubuntu располагаются по адресу: archive.ubuntu.com/ubuntu. Это — «головное» хранилище пакетов, имеющее многочисленные региональные зеркала, принадлежность которых к стране указывается стандартным двухсимвольным префиксом, например ru.archive.ubuntu.com/ubuntu/ — российское зеркало. Впрочем, как раз российского зеркала утилита Mintsources (о которой шла речь в соответствующем разделе) автоматически не предлагает.</p>
+    <p class="Textbody">Проще всего с устройством репозиториев с точки зрения применителя можно ознакомиться просмотром их списка в файле /etc/apt/sources.list.d/official-package-repositories.list. Он создаётся автоматически при инсталляции, но затем может быть изменён с помощью Mintsources или отредактирован в текстовом редакторе. Например, у меня относящесяся к репозиториям Ubuntu строки имеют следующий вид:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb http://gd.tuwien.ac.at/opsys/linux/ubuntu/archive trusty main restricted universe multiverse</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb http://gd.tuwien.ac.at/opsys/linux/ubuntu/archive trusty-updates main </span><span style="background-color:#dddddd">restricted universe multiverse</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb http://security.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse</span> </p>
+    <p class="Textbody">Здесь первый компонент в каждой строке, deb, означает, что речь идёт о бинарных пакетах (про пакеты с исходниками я скажу чуть позже). Далее следует «базовый» URL репозитория. В первых двух строках он соответствует тому серверу, который был выбран мной с помощью утилиты Mintsources по «скоростным» показателям, в третьей — сохранился в первозданном виде. Затем определяется группа пакетов, соответствующая имени релиза. В данный момент для нас актуален Trusty, потому как именно из него Mint Rebecca (как и предшествовавшая ей Qiana) черпает все свои основные, не специфичные для него, компоненты. Групп этих три:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">просто trusty — в неё входят собственно собственно пакеты дистрибутива; </p>
+      </li>
+      <li>
+        <p class="Textbody">trusty-updates — «обычные» обновления пакетов, связанные со сменой версий, сборок и исправлением ошибок; </p>
+      </li>
+      <li>
+        <p class="Textbody">trusty-security — как нетрудно догадаться, обновления, латающие «дыры» в безопасности системы. </p>
+      </li>
+    </ul>
+    <p class="Textbody">На самом деле в репозитории Ubuntu имеются ещё группы trusty-backport и trusty-proposed, но в Mint они по умолчанию не задействованы, а trusty-proposed вообще можно подключить только вручную (чего, впрочем, делать не стоит без очень веских причин). В нашем же файле среди «Ubuntu'йских» строк есть такая:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb http://archive.canonical.com/ubuntu/ trusty partner</span> </p>
+    <p class="Textbody">Это репозиторий для пакетов, в том числе и коммерческих, разрабатываемых партнёрами фирмы Canonical. Я, кажется, никогда ничего из него не устанавливал, ни в Mint, ни в Ubuntu, и больше говорить о нём не буду.</p>
+    <p class="Textbody">Далее в каждой группе идёт перечень категорий пакетов. Их четыре:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">main — полностью свободные пакеты, официально поддерживаемые разработчиками Ubuntu; </p>
+      </li>
+      <li>
+        <p class="Textbody">restricted — пакеты, также официально поддерживаемые дистрибутивом, но не вполне свободные; </p>
+      </li>
+      <li>
+        <p class="Textbody">universe — полностью свободные программы, официально дистрибутивом не поддерживаемые и развивающиеся силами независимых разработчиков; </p>
+      </li>
+      <li>
+        <p class="Textbody">multiverse — пакеты, аналогично universe официально не поддерживаемые и, подобно restricted, не вполне свободные. </p>
+      </li>
+    </ul>
+    <p class="Textbody">«Не вполне свобода» пакетов из категорий restricted и multiverse выражается в ограничениях на их распространение (например, мультимедиа-кодеки, использующие алгоритмы, патентованные в отдельных странах) или могут распространяться только в бинарном виде (фирменные драйверы для видеокарт Nvidia).</p>
+    <p class="Textbody">До сих пор речь шла о репозиториях бинарных пакетов. Однако существуют и параллельные им репозитории с исходниками. Они подлючаются, если отметить соответствующую опцию в Mintsources — при этом герерируется файл /etc/apt/sources.list.d/official-source-repositories.list. Он устроен точно таким же образом, что и official-package-repositories.list, только в первой позиции каждой его строки будет стоять deb-src:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb-src http://gd.tuwien.ac.at/opsys/linux/ubuntu/archive trusty main restricted universe multiverse</span> </p>
+    <p class="Textbody">и так далее.</p>
+    <h3 id="toc123"><a id="RefHeading16881713816058"></a><a id="bkmRefHeading16881713816058"></a><a id="toc122"></a><a id="bkmtoc122"></a><a id="RefHeading5261136957987"></a><a id="bkmRefHeading5261136957987"></a><a id="bkmRefHeading5261136957987"></a><a id="bkmbkmRefHeading5261136957987"></a>Особенности репозитория Mint</h3>
+    <p class="Textbody">Репозитории Mint организованы внешне сходно с таковыми Ubuntu, но на самом деле строятся по несколько иным принципам. В файле official-package-repositories.list они описываются двумя строками:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb http://linux-mint.froonix.org rebecca main upstream import</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb http://extra.linuxmint.com rebecca main</span> </p>
+    <p class="Textbody">Первая — определяет основной репозиторий для пакетов дистрибутива, распространяемых свободно: это аналог групп main и universe из репозиториев Ubuntu. Как и в последних, в ней указывается URL подключённого по умолчанию или выбранного позднее сервера, а затем имя релиза (на текущий момент — rebecca). Далее следует список категорий, однако тут в это понятие вкладывается несколько иной смысл. Так, категория main включает в себя те самый дистрибутив-специфичные пакеты, о которых я столько говорил раньше: «фирменные» утилиты, MDA, Cinnamon, MATE. В категорию upstream входят пакеты, заимствованные из GNOME 3 и специально пересобранные для совместимости с Mint. Здесь же можно обнаружить пакеты для его Xfce-редакции. Категория же import образована пакетами для KDE-редакции, представленными во всей их полноте.</p>
+    <p class="Textbody">Кроме трёх перечисленных, в основном репозитории имеются категории backport и romeo. В первой — пакеты, перенесённые из более новых версий в более старые, второй — пакеты в стадии тестирования. Обе эти категории подключаются только в том случае, если в Mintsources были отмечены соответствующие опции (ну или они были прописаны руками в official-package-repositories.list).</p>
+    <p class="Textbody">Репозиторий extra.linuxmint.com не имеет зеркал (по крайней мере, сейчас) и содержит единственную категорию main, включающую не вполне свободные пакеты — это аналог категорий restricted и multiverse из репозиториев Ubuntu. То есть формально в нём есть и все те же категории, что и в основном репозитории, но они пусты (по крайней мере, в момент сочинения этих строк).</p>
+    <p class="Textbody">Симметрично строкам для репозиториев бинарных пакетов в файле official-source-repositories.list есть строки для описания репозиториев исходников:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb-src http://linux-mint.froonix.org rebecca main upstream import</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb-src http://extra.linuxmint.com rebecca main</span> </p>
+    <p class="Textbody">Файлы списков репозиториев можно (почти) безбоязненно править руками в текстовом редакторе. В частности, именно таким образом осуществляется апгрейд с релиза на релиз (по крайней мере, в пределах одной LTS-версии): для этого достаточно заменить, например, все вхождения qiana на rebecca и выполнить тотальное обновление системы, о чём будет рассказано в своё время.</p>
+    <p class="Textbody">В заключение же разговора о репозиториях Mint напомню, что их содержимое можно посмотреть визуально в браузере — и <a href="http://packages.linuxmint.com/index.php" target="_blank">основного</a>, и <a href="http://extra.linuxmint.com/index.php" target="_blank">extra</a>.</p>
+    <h3 id="toc124"><a id="RefHeading16901713816058"></a><a id="bkmRefHeading16901713816058"></a><a id="toc123"></a><a id="bkmtoc123"></a><a id="RefHeading5281136957987"></a><a id="bkmRefHeading5281136957987"></a><a id="bkmRefHeading5281136957987"></a><a id="bkmbkmRefHeading5281136957987"></a>О PPA-репозиториях</h3>
+    <p class="Textbody">Кроме официального репозитория, для Ubuntu существует централизованное хранилище репозиториев дополнительных, объединяемых понятием PPA — Personal Packages Archive, то есть входящих в персональный архив пакетов, пополняемый сторонними разработчиками и майнтайнерами. А их, вследствие популярности дистрибутива, очень немало. И поэтому свежие версии многих программ, как популярных (что важно для начинающих), так и весьма экзотических (что часто критично для многоопытных), в первую очередь появляются как бинарники в так называемых PPA-репозиториях Ubuntu.</p>
+    <p class="Textbody">Для доступа к PPA-репозиториям фирмой Canonical разработан специальный онлайновый инструмент — Launchpad, размещённый на <a href="https://launchpad.net/" target="_blank">одноимённом сайте</a>. Это — не открытая и не свободная система. Более того, она имеет и платную версию, предназначенную для коммерческих пакетов. Однако мы ведь не рататую абстрактной свободы, и нас это не волнует, верно? Цели и задачи Launchpad'а не ограничиваются обеспечением доступа к PPA-репозиториям. Однако остальные его функции предназначены для разработчиков, и потому нас, применителей, также не касаются.</p>
+    <p class="Textbody">Казалось бы, при чём здесь Mint? А при том, что практически все пакеты из PPA-репозиториев прекрасно устанавливаются в нём и работают точно так же, как в родной Ubuntu. И потому обращение к ним неизбежно, как как крах мировой системы социализма: далеко не всегда потребности применителя в пакетах удовлетворяются официальными репозиториями Ubuntu, даже дополненными Mint'овскими.</p>
+    <p class="Textbody">В разделе про Mintsource мы уже занимались подключением PPA-репозиториев. Теперь посмотрим, что получается в итоге. А вот что: в том же каталоге /etc/apt/sources.list.d/ к спискам официальных репозиториев, official-package-repositories.list и official-source-repositories.list, присоединяются файлы вида *.list — по одному на каждый подключённый репозиторий, где под маской скрывается его так называемое ppa-имя.</p>
+    <p class="Textbody">Откуда берётся ppa-имя — расскажу в очерке про управление пакетами. А пока — как оно выглядит. Большинство пакетов в PPA-репозиториях собирается и поддерживается майнтайнерами-индивидуалами, и потому здесь нередко можно видеть их имена, фамилии или ники, например, ppa:andrew-crew-kuznetsov/crew — репозиторий, поддерживаемый Андреем Crew Кузнецовым, разработчиком программы XNeur и сборщиком пакета hunspell-ru-ie-yo, словаря для проверки русской орфографии, поддерживающего букву Ё. В других случаях это просто имя пакета, часто с отражением статуса разработки, например, ppa:marlin-devs/marlin-daily — репозиторий «ежедневных» сборок файлового менеджера Marlin. Репозиторий может включать несколько связанных друг с другом пакетов — и тогда называться по главному из них, например: ppa:zfs-native/stable и ppa:zfs-native/daily — репозитории пакетов поддержки ZFS on Linux стабильной и разрабатываемой ветки, соответственно.</p>
+    <p class="Textbody">Возможны и более причудливые имена, например, ppa:mystic-mirage/komodo-edit — репозиторий текстового редактора Komodo Edit. Важно, что они в обязательном порядке включают «префикс» ppa:, который в имени соответствующего list-файла отбрасывается. Зато завершается последний обязательным компонентом — именем релиза. Например, для Komodo Edit имя list-файла — mystic-mirage-komodo-edit-trusty.list.</p>
+    <p class="Textbody">Внутри такого файла — обычно две строки. Например, для пакета komodo-edit они будут такими:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb http://ppa.launchpad.net/mystic-mirage/komodo-edit/ubuntu trusty main</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb-src http://ppa.launchpad.net/mystic-mirage/komodo-edit/ubuntu trusty main</span> </p>
+    <p class="Textbody">То есть в одном файле описывается и репозиторий бинарников, и репозиторий исходников. Если последний отсутствует — соответствующей строки не будет. Впрочем, в PPA-репозиториях пакетов без исходников не водится. А вот среди «не вполне свободного» софта встречаются, примером чему — браузер Opera: файл opera-stable.list выглядит следующим образом:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">deb http://deb.opera.com/opera-stable/ stable non-free #Opera Browser (final releases)</span> </p>
+    <p class="Textbody">Однако случаи, когда приходится искать пакеты за пределами PPA-репозиториев, очень редки. Ибо в них, как в Греции есть всё — и ещё немного больше, чем всё.</p>
+    <h3 id="toc125"><a id="RefHeading16921713816058"></a><a id="bkmRefHeading16921713816058"></a><a id="toc124"></a><a id="bkmtoc124"></a><a id="RefHeading5301136957987"></a><a id="bkmRefHeading5301136957987"></a><a id="bkmRefHeading5301136957987"></a><a id="bkmbkmRefHeading5301136957987"></a>Подключение PPA-репозиториев</h3>
+    <p class="Textbody">Чтобы воспользоваться всем греческим сокровищем,описанным на предыдущей страницу, необходимо научиться подключать дополнительные репозитории вообще и PPA-репозитории в особенности.</p>
+    <p class="Textbody">В очерке про фирменный инструментарий Mint был описан один способ их подключения — с помощью утилиты mintsources, она же software-sources. Однако это можно сделать и в CLI — командой add-apt-repository (или apt-add-repository — это опять-таки символическая ссылка на неё). Поскольку очевидно, что для подключения репозиториев требуются права администратора, команда эта должна быть дана в такой форме:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo add-apt-repository ppa-name</span> </p>
+    <p class="Textbody">Если воспользоваться глобальными псевдонимами Zsh, это будет выглядеть примерно так:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo Ar ppa-name</span> </p>
+    <p class="Textbody">Так что остаётся только сущая мелочь — определить это самое ppa-имя нужного репозитория. Между прочим, та же проблема была и при использовании mintsources — и он никак не может помочь в этом деле. Как её решить?</p>
+    <p class="Textbody">Можно, конечно, походить по форумам Ubuntu'йской тематики, можно сделать запрос к Гоше или Яше, указав имя искомого пакета, можно... да много чего можно сделать, чтобы по прошествии изрядного или ещё большего времени получить нужный результат. А можно, действуя методично и планомерно, прибегнуть к универсальному способу. И для начала зайти на <a href="https://launchpad.net/" target="_blank">Launchpad</a>:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_001.png">
+        <img alt="Изображение249" class="frameGraphics" id="249graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_001-539x572.png" style="border:1.0px solid #000080;padding:0;width:540.8416px;height:573.83685px" />
+      </a>
+      <a id="a249graphic"></a>
+      <a id="bkm249graphic"></a>
+    </p>
+    <p class="Textbody">Далее в поле поиска следует набрать имя требующегося пакета или его фрагмент, например, zfs. Далее в списке выдачи результатов нужно отыскать нужную строку — в данном случае это будет ZFS Stable Releases... или ZFS Daily Releases..., в зависимости от требований — стабильности или фронтирности:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_002.png">
+        <img alt="Изображение250" class="frameGraphics" id="250graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_002-539x572.png" style="border:1.0px solid #000080;padding:0;width:540.8416px;height:573.83685px" />
+      </a>
+      <a id="a250graphic"></a>
+      <a id="bkm250graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_002.png"> </a>
+    </p>
+    <p class="Textbody">Теперь — щёлкнуть на ней (предположим, мы предпочти синицу стабильности журавлю фронтирности), и прочитать раздельчик, озаглавленный Adding this PPA to your system:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_003.png">
+        <img alt="Изображение251" class="frameGraphics" id="251graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_003-539x572.png" style="border:1.0px solid #000080;padding:0;width:540.8416px;height:573.83685px" />
+      </a>
+      <a id="a251graphic"></a>
+      <a id="bkm251graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_003.png"> </a>
+    </p>
+    <p class="Textbody">Искомое ppa-имя будет выделено полужирным шрифтом:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_004.png">
+        <img alt="Изображение252" class="frameGraphics" id="252graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_004.png" style="border:1.0px solid #000080;padding:0;width:461.84946px;height:324.84158px" />
+      </a>
+      <a id="a252graphic"></a>
+      <a id="bkm252graphic"></a>
+    </p>
+    <p class="Textbody">Его и следует подставить в качестве аргумента команды:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo add-apt-repository ppa:zfs-native/stable</span> </p>
+    <p class="Textbody">Дабы развеять все сомнения, можно пройти по ссылке Read about installing. Появится всплывающее окошко, в котором процедура добавления PPA-репозитория будет описана подробно:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_005.png">
+        <img alt="Изображение253" class="frameGraphics" id="253graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_005-572x365.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:366.83212px" />
+      </a>
+      <a id="a253graphic"></a>
+      <a id="bkm253graphic"></a>
+    </p>
+    <p class="Textbody">И не только описана, но и проиллюстрирована:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_006.png">
+        <img alt="Изображение254" class="frameGraphics" id="254graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_006.png" style="border:1.0px solid #000080;padding:0;width:532.829px;height:245.84944px" />
+      </a>
+      <a id="a254graphic"></a>
+      <a id="bkm254graphic"></a>
+    </p>
+    <p class="Textbody">Да, выполнив последнюю команду, нужно ни в коем случае не забыть проделать процедуру апдейта:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt update</span> </p>
+    <p class="Textbody">Обращаю внимание — команда sudo отсутствует: как будет показано в следующем очерке, реализация apt для Mint позволяет применителю не утруждать себя её вводом.</p>
+    <p class="Textbody">Теперь можно устанавливать пакеты из новообретённого репозитория (о чём также пойдёт речь в следующем очерке). А ознакомиться со списком оных можно ещё на странице Launchpad'а:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_007.png">
+        <img alt="Изображение255" class="frameGraphics" id="255graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_007-572x536.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:537.8558px" />
+      </a>
+      <a id="a255graphic"></a>
+      <a id="bkm255graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_007.png"> </a>
+    </p>
+    <p class="Textbody">Впрочем, можно поступить иначе, обойдясь без команды add-apt-repository: развернуть строку Technical details about this PPA и в выпадающем меню выбрать имя (номер) своего релиза Ubuntu. В нашем случае это будет Trusty (14.04), так как и Mint Qiana, и Mint Rebecca основаны на нём:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/add-repo_008.png">
+        <img alt="Изображение256" class="frameGraphics" id="256graphic" src="http://alv.me/wp-content/img/im_cin_img/add-repo_008-572x282.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:283.8337px" />
+      </a>
+      <a id="a256graphic"></a>
+      <a id="bkm256graphic"></a>
+    </p>
+    <p class="Textbody">Строки из поля ниже просто копируются в новый текстовый файл, создаваемый в каталоге /etc/apt/sources.list.d под именем package_name-status-release_name.list, то есть в нашем примере — zfs-native-stable-trusty.list. После чего опять же не забыть про</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt update</span> </p>
+    <p class="Textbody">Не правда ли, любой из предложенных способов проще, чем беготня по форумам? Да и Гошу с Яшей не стоит беспокоить по пустякам.</p>
+    <p class="Textbody">Отдельный случай — подключение репозиториев, содержащих всякие красивости, вроде тем, пиктограмм или обоин. Главным источником таковых является сайт <a href="http://www.noobslab.com/" target="_blank">NoobsLab</a>. Здесь также всё просто — в каждой теме или коллекции пиктограмм имеется исчерпывающая инструкция по подключению соответствующего репозитория. В подавляющем большинстве случаев она сводится к выполнению директив</p>
+    <p class="Textbody"><span style="background-color:#dddddd">sudo add-apt-repository ppa:noobslab/themes</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">sudo add-apt-repository ppa:noobslab/icons</span> </p>
+    <p class="Textbody">что, очевидно, нужно проделать единократно, с последующим апдейтом, то есть в нашем случае опять-таки</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt update</span> </p>
+    <p class="Textbody">Что же до обоин — думаю, каждый уважающий сеья применитель-эстет имеет собственную коллекцию картинок для использования в этом качестве.</p>
+    <p class="Textbody">Редко, но бывает так, что приходится устанавливать пакеты из какого-либо иного источника, нежели PPA-репозитории. Но в этом случае грамотно сделанный пакет при установке сам добавляет свой репозиторий в общий список — так, например, происходит при установке биаузера Opera версии 26.X для Linux. Либо — сопровождается сведениями о том, как это сделать самостоятельно. Если ни того, ни другого не имеет места быть — возникает вопрос: а стоит ли связываться с таким пакетом?</p>
