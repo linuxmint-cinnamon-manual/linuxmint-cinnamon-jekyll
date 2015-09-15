@@ -4,7 +4,11 @@
 }
 
 
-h3 {color: #E50E51; }
+h1 {color: #d3691f; /* cinnamon1 */ }
+
+
+h3 {color: #e44235; /* cinnamon2 */ }
+/* h3 {color: #E50E51; } */
 h4 {color: #808080; }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
