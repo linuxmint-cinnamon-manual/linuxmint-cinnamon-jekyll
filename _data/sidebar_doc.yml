@@ -113,3 +113,10 @@ entries:
           platform: all
           product: all
           version: all
+
+        - title: Прочие настройки
+          url: /11_other_config.html
+          audience: writers, designers
+          platform: all
+          product: all
+          version: all
