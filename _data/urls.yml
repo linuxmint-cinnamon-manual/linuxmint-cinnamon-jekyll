@@ -1,21 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 titlepage:
   title: "Title Page"
   url: "titlepage.html"
@@ -26,7 +8,6 @@ tocpage:
   title: "Table of Contents"
   url: "tocpage.html"
   link: "<a href='tocpage.html'>Table of Contents</a>"
-
 
 
 

@@ -5,118 +5,45 @@ entries:
 - title: Sidebar
   subcategories:
     - title: Вступление
-      audience: writers, designers
-      platform: all
-      product: all
-      version: all
-      print: true
-
       items:
         - title: Аннотация
           url: /index.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Об этой книге
           url: /01_about_book.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
     - title: Введение
-      audience: writers, designers
-      platform: all
-      product: all
-      version: all
-      print: true
-
       items:
         - title: Введение в Linux Mint
           url: /02_linux_mint_into.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Введение в Cinnamon
           url: /03_cinnamon_intro.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
     - title: "Linux Mint: установка"
-      audience: writers, designers
-      platform: all
-      product: all
-      version: all
-      print: true
-
       items:
         - title: "Linux Mint: установка"
           url: /04_linux_mint_installation.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
-                
 
     - title: "Mint и Cinnamon"
-      audience: writers, designers
-      platform: all
-      product: all
-      version: all
-      print: true
-
       items:
         - title: "Обзор среды"
           url: /05_mint_and_cinnamon_obzor.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Cinnamon и системные настройки
           url: /06_cinnamon_system_config.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Секция Параметры
           url: /07_section_parameters.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Секция Оборудование
           url: /08_devices.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Секция Администрирование
           url: /09_admins.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: 'Mint: фирменный инструментарий'
           url: /10_mint_utils.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all
 
         - title: Прочие настройки
           url: /11_other_config.html
-          audience: writers, designers
-          platform: all
-          product: all
-          version: all

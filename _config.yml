@@ -24,7 +24,7 @@ exclude:
   - configs/
   - _site
   - doc_multi*
-  - source/
+  - ru/17-1-Rebecca/source/
 
 # same for all
 host: 127.0.0.1

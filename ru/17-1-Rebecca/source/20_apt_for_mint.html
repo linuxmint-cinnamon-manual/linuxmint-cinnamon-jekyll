@@ -1,0 +1,448 @@
+    <h2 id="toc131"><a id="RefHeading17041713816058"></a><a id="bkmRefHeading17041713816058"></a><a id="toc130"></a><a id="bkmtoc130"></a><a id="RefHeading12761136957987"></a><a id="bkmRefHeading12761136957987"></a><a id="bkmRefHeading12761136957987"></a><a id="bkmbkmRefHeading12761136957987"></a>Утилита apt. Реализация для Linux Mint</h2>
+    <p class="Textbody">В данном очерке рассмотрены особенности утилиты apt в реализации для дистрибутива Linux Mint и её отличия от семейства утилит, входящих в пакет apt, общий для всех deb based дистрибутивов.</p>
+    <h3 id="toc132"><a id="RefHeading17061713816058"></a><a id="bkmRefHeading17061713816058"></a><a id="toc131"></a><a id="bkmtoc131"></a><a id="RefHeading5401136957987"></a><a id="bkmRefHeading5401136957987"></a><a id="bkmRefHeading5401136957987"></a><a id="bkmbkmRefHeading5401136957987"></a>Введение</h3>
+    <p class="Textbody">В процессе сочинения этой книги обнаружилось, что реализация утилиты apt для этого дистрибутива не документирована никак — не только на языке родных осин, но даже на мове Вильяма нашего, Шекспира. В связи с чем я и решил посвятить ей отдельный очерк.</p>
+    <p class="Textbody">Необходимость в таком материале, как мне кажется, ещё и в том, что многие начинающие пользователи Mint и особенно Linux вообще, судя по сайтам, блогам и форумам соответствующей тематики, даже не подозревают о существовании реализации apt для Mint и её отличиях от тёзки из одноимённого пакета. И потому механически применяют рецепты для чистой Ubuntu и её прямых клонов, на которые так богаты указанные ресурсы. Хотя использование apt для Mint делает эти рецепты излишними — функционал этой утилиты позволяет добиться той же цели быстрей и проще. По крайней мере, путём меньшего количества нажатий на клавиши.</p>
+    <h3 id="toc133"><a id="RefHeading17081713816058"></a><a id="bkmRefHeading17081713816058"></a><a id="toc132"></a><a id="bkmtoc132"></a><a id="RefHeading5421136957987"></a><a id="bkmRefHeading5421136957987"></a><a id="bkmRefHeading5421136957987"></a><a id="bkmbkmRefHeading5421136957987"></a>Общее описание</h3>
+    <p class="Textbody">Утилиту apt в реализации для Mint не следует путать ни с одноимённым пакетом, входящим в состав всех deb based дистрибутивов (в том числе и в Mint), ни с одноимённой же утилитой из этого пакета.</p>
+    <p class="Textbody">Утилита apt для Mint входит в состав пакета mintsystem, что определяется с помощью её же самой:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt contains /usr/local/bin/apt</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">mintsystem: /usr/local/bin/apt</span> </p>
+    <p class="Textbody">В отличие от стандартной утилиты apt, располагающейся в каталоге /usr/bin, apt для Mint находится в каталоге /usr/local/bin, что определяется такой командой:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ which apt</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">/usr/local/bin/apt</span> </p>
+    <p class="Textbody">При вводе в командной строке apt без указания пути вызывается именно она, что определяется значениями переменной PATH, определёнными в общесистемном конфиге /etc/login.defs:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ echo $PATH</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games</span> </p>
+    <p class="Textbody">Так что для запуска стандартной утилиты apt из одноимённого пакета для неё следует указывать полный путь, например</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ /usr/bin/apt list --installed</span> </p>
+    <p class="Textbody">для вывода списка инсталлированных пакетов — это чуть ли не единственная функция стандартного инструментария пакета apt, отсутствующая в apt для Mint. Ибо последняя перекрывает почти все возможности утилит apt-get и apt-cache, большинство возможностей командного режима aptitude, а также выполняет некоторые функции низкоуровневой утилиты dpkg.</p>
+    <p class="Textbody">Примечание. Утилита apt — не единственный компонент пакета mintsystem. Кроме неё, он включает ещё четыре утилиты (также располагающиеся в каталоге</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">/usr/local/bin/search</span> </p>
+    <p class="Textbody">): mint-md5sum, search, highlight и pastebin.</p>
+    <p class="Textbody">К управлению пакетами некоторое отношение имеет только первая из них, предназначенная для подсчёта контрольных сумм. Так, команда</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ mint-md5sum opera-stable_26.0.1656.60_amd64.deb</span> </p>
+    <p class="Textbody">выведет её для пакета opera-stable в таком виде:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/02/mint-md5sum_001.png">
+        <img alt="Изображение263" class="frameGraphics" id="263graphic" src="http://alv.me/wp-content/img/im_cin_img/mint-md5sum_001.png" style="border:1.0px solid #000080;padding:0;width:375.82742px;height:132.84158px" />
+      </a>
+      <a id="a263graphic"></a>
+      <a id="bkm263graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/02/mint-md5sum_001.png"> </a>
+    </p>
+    <p class="Textbody">О команде search говорилось в очерке про утилиты CLI. А об остальных двух для полноты картины скажу здесь же.</p>
+    <p class="Textbody">Утилита pastebin предназначена для быстрого размещёния в Сети фрагментов текста, которые почему-либо нежелательно делать доступными каким-либо иным образом. Делается это через сервис, предоставляемый проектом Mint. Так, командная конструкция</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ echo 'Утилита pastebin предназначена для быстрого размещёния в Сети' | pastebin</span> </p>
+    <p class="Textbody">даст ткакой вывод:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">http://paste.linuxmint.com/view/u5i0</span> </p>
+    <p class="Textbody">То есть введённый фрагмент будет доступен по указанному в выводже адресу (например, через браузер). Правда, русскоязычный текст по умолчанию окажется там в кодировке ISO 8859-5, так что надо озаботься тем, чтобы браузер поддерживал перекодирование страницы на лету.</p>
+    <p class="Textbody">Ну а утилита highlight обеспечивает подсветку произвольного текстового фрагмента, заданного как её аргумент. Например, командная конструкция</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ echo 'Утилита pastebin предназначена для быстрого размещёния в Сети' | highlight code</span> </p>
+    <p class="Textbody">на выходе даст подсвеченным фрагмент code:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/02/highlight_001.png">
+        <img alt="Изображение264" class="frameGraphics" id="264graphic" src="http://alv.me/wp-content/img/im_cin_img/highlight_001-572x121.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:122.82583px" />
+      </a>
+      <a id="a264graphic"></a>
+      <a id="bkm264graphic"></a>
+    </p>
+    <p class="Textbody">Теоретически рассуждая, если вывод этой конструкции передать по конвейеру команде pastebin, то и в Сети соответствующий фроагмент будет размещён в «подсвеченном» виде. Однако эксперимент показал, что сервис проекта Mint этого не поддерживает.</p>
+    <h3 id="toc134"><a id="RefHeading17101713816058"></a><a id="bkmRefHeading17101713816058"></a><a id="toc133"></a><a id="bkmtoc133"></a><a id="RefHeading5441136957987"></a><a id="bkmRefHeading5441136957987"></a><a id="bkmRefHeading5441136957987"></a><a id="bkmbkmRefHeading5441136957987"></a>Применение</h3>
+    <p class="Textbody">Утилита apt для Mint запускается одноимённой командой CLI с указанием внутренней команды, определяющей цель действия и, в большинстве случаев, аргумента (аргументов), в качестве которых выступает имя пакетов (или имена — их может быть сколько угодно):</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt command pkgname1 ... pkgname#</span> </p>
+    <p class="Textbody">Некоторые часто используемые внутренние команды apt аргументов не требуют.</p>
+    <p class="Textbody">Полный список внутренних команд apt для Mint можно получить «голой» командой</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt</span> </p>
+    <p class="Textbody">вывод которой выглядит следующим образом:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">apt</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Usage: apt command [options]</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">       apt help command [options]</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Commands:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">autoclean       - Erase old downloaded archive files</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">autoremove      - Remove automatically all unused packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">build           - Build binary or source packages from sources</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">build-dep       - Configure build-dependencies for source packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">changelog       - View a package's changelog</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">check           - Verify that there are no broken dependencies</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">clean           - Erase downloaded archive files</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">contains        - List packages containing a file</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">content         - List files contained in a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">deb             - Install a .deb package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">depends         - Show raw dependency information for a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">dist-upgrade    - Perform an upgrade, possibly installing and removing packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">download        - Download the .deb file for a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">dselect-upgrade - Follow dselect selections</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">held            - List all held packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">help            - Show help for a command</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">hold            - Hold a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">install         - Install/upgrade packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">policy          - Show policy settings</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">purge           - Remove packages and their configuration files</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">rdepends        - Show reverse dependency information for a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">reinstall       - Download and (possibly) reinstall a currently installed package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">remove          - Remove packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">search          - Search for a package by name and/or expression</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">show            - Display detailed information about a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">source          - Download source archives</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">sources         - Edit /etc/apt/sources.list with nano</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">unhold          - Unhold a package</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">update          - Download lists of new/upgradable packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">upgrade         - Perform a safe upgrade</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">version         - Show the installed version of a package</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">                        This apt has Super Cow Powers</span> </p>
+    <p class="Textbody">Здесь для начала следует сказать о внутренних командах version и help. Первая теоретически должны выводить номер текущей версии apt для Mint, но практически не выводит ничего — лишь пустую строку. Команда же help без аргументов выведет список внутренних команд, идентичный приведённому выше. При указании аргумента — любой из внутренних команд она выведет её эквиваленты для apt-cache, apt-get или dpkg. Например:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt help search</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">"apt search" is equivalent to "aptitude search"</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt help install</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">"apt install" is equivalent to "sudo apt-get install"</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt help deb</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">"apt deb" is equivalent to "sudo dpkg -i"</span> </p>
+    <p class="Textbody">Внутренние команды apt для Mint можно разделить на три группы, которые предназначены для:</p>
+    <ol style="margin-top:0;margin-bottom:0;list-style-type:decimal;clear:left">
+      <li>
+        <p class="Textbody">получения информации о пакетах; </p>
+      </li>
+      <li>
+        <p class="Textbody">установки и удаления отдельных бинарных пакетов; </p>
+      </li>
+      <li>
+        <p class="Textbody">общего обновления системы </p>
+      </li>
+      <li>
+        <p class="Textbody">работы с пакетами исходных текстов. </p>
+      </li>
+    </ol>
+    <p class="Textbody">Команды первой группы могут быть выполнены обычным пользователем, второй и третьей — требуют прав администратора. Однако для получения их утилита apt для Mint не нуждается в команде sudo, данной явным образом: она автоматически вызывается при попытке исполнения соответствующих внутренних команд. Например:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt install geany</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">[sudo] password for alv:</span> </p>
+    <p class="Textbody">Тем не менее, внутренние команды apt для Mint целесообразно рассмотреть по трём указанным группам.</p>
+    <h3 id="toc135"><a id="RefHeading17121713816058"></a><a id="bkmRefHeading17121713816058"></a><a id="toc134"></a><a id="bkmtoc134"></a><a id="RefHeading5461136957987"></a><a id="bkmRefHeading5461136957987"></a><a id="bkmRefHeading5461136957987"></a><a id="bkmbkmRefHeading5461136957987"></a>Информация о пакетах</h3>
+    <p class="Textbody">Пакетный менеджмент начинается с поиска нужного пакета, для чего предназначена внутренняя команда search, требующая аргумента в виде ключевого слова. Поиск по ключевому слову осуществляется в именах пакетов и их кратких описаниях (т.н. резюме). Например, команда</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt search geany</span> </p>
+    <p class="Textbody">отыщет одноимённый пакет для установки этого текстового редактора (называемого, однако, «Небольшой и быстрой IDE») и все его плагины:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany                           - Небольшая и быстрая IDE</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">v   geany-abi-69                    -</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">v   geany-api-216                   -</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany-common                    - Небольшая и быстрая IDE — общие файлы</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany-plugin-addons             - Различные дополнительные модули для Geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany-plugin-codenav            - Модуль навигации по коду для Geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany-plugin-xmlsnippets        - XMLSnippets plugin for Geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">p   geany-plugins                   - Набор плагинов для Geany</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">p   geany-plugins-common            - Набор плагинов для Geany (переводы)</span> </p>
+    <p class="Textbody">Важное отличие от аналога — команды apt-cache search: apt search показывает основной пакета (i — установленный, p — не установленный или «чисто» удалённый, и так далее) и дополнительный (A — автоматически установленный, h — с фиксированной версией, и так далее) статусы пакетов.</p>
+    <p class="Textbody">Внутренняя команда held позволяет отсортировать пакеты с фиксированной версией, то есть те, которые не будут обновляться по команде apt upgrade (о ней буде сказано в следующем разделе).</p>
+    <p class="Textbody">Подробную информацию об отдельном пакете можно получить с помощью внутренней команды show. Например,</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt show geany</span> </p>
+    <p class="Textbody">выведет следующее:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">Пакет: geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Состояние: не установлен</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Версия: 1.23.1+dfsg-1</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Приоритет: необязательный</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Раздел: universe/devel</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Сопровождающий: Ubuntu Developers &lt;ubuntu-devel-discuss@lists.ubuntu.com&gt;</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Архитектура: amd64</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Размер в распакованном виде: 2671 k</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Зависимости: libc6 (&gt;= 2.15), libcairo2 (&gt;= 1.6.0), libgcc1 (&gt;= 1:4.1.1),</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">                        libgdk-pixbuf2.0-0 (&gt;= 2.22.0), libglib2.0-0 (&gt;=</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">                        2.35.9), libgtk2.0-0 (&gt;= 2.22.0), libpango1.0-0 (&gt;=</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">                        1.18.0), libstdc++6 (&gt;= 4.1.1), geany-common (=</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">                        1.23.1+dfsg-1)</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Пред-зависимости: multiarch-support</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Предлагает: libvte9, doc-base</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Конфликтует: geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Повреждает: geany-plugins-common (&lt; 0.21), geany-plugins-common (&lt; 0.21)</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Предоставляет: geany-abi-69, geany-api-216</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Описание: Небольшая и быстрая IDE</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> Geany — нетребовательная к ресурсам интегрированная среда разработки программ,</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> маленькая и быстрая, с небольшим количеством зависимостей от других пакетов.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> использует только GTK2, поэтому для запуска Geany необходимы только</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> runtime-библиотеки GTK2.</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> The basic features of Geany are:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * syntax highlighting</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * code completion</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * auto completion of constructs like if, for and while, XML and HTML</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * call tips</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * folding</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * many supported filetypes like C, Java, PHP, HTML, Python, Perl, Pascal</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * symbol lists</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> * embedded terminal emulation</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Сайт: http://www.geany.org</span> </p>
+    <p class="Textbody">А сведения о смене версий пакета получаются с помощью внутренней команды changelog. Для Geany это выглядит так:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">geany (1.23.1+dfsg-1) unstable; urgency=low</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * [3b1ced4] Imported Upstream version 1.23.1+dfsg</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * [b418909] Update debian-branch in gbp.conf</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> — Chow Loong Jin &lt;hyperair@debian.org&gt;  Mon, 20 May 2013 00:18:56 +0800</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">geany (1.23+dfsg-2) unstable; urgency=low</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * Upload to unstable, fixes FTBFS (Closes: #707368)</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * [a472a80] Enable parallel builds</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * [17a6378] No-change bump of Standards-Version to 3.9.4</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  * [ea78f31] Add README.source describing git branch structure</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> — Chow Loong Jin &lt;hyperair@debian.org&gt;  Fri, 10 May 2013 15:27:35 +0800</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">...</span> </p>
+    <p class="Textbody">И так далее.</p>
+    <p class="Textbody">Более подробные, нежели вывод команды show, сведения о зависимостях пакета даёт пара внутренних команд depends и rdepends. Первая выводит полный список пакетов, от которых зависит заданный в качестве её аргумента — жёстких, рекомендуемых, предлагаемых и конфликтующих:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt depends geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libc6</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libcairo2</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libgcc1</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libgdk-pixbuf2.0-0</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libglib2.0-0</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libgtk2.0-0</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libpango1.0-0</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: libstdc++6</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Зависит: geany-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  ПредЗависит: multiarch-support</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">    multiarch-support:i386</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Предлагает: libvte9</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Предлагает: doc-base</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Ломает: geany-plugins-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Ломает: &lt;geany-plugins-common:i386&gt;</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">  Конфликтует: geany:i386</span> </p>
+    <p class="Textbody">Команда же rdepends решает обратную задачу — выводит список пакетов, зависящих от данного:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt depends geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Reverse Depends:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany:i386</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugins-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugins</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-xmlsnippets</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-webhelper</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-vc</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-updatechecker</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-treebrowser</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-tableconvert</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-spellcheck</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-shiftcolumn</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-sendmail</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-scope</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-prj</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-prettyprinter</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-pg</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-numberedbookmarks</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-multiterm</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-miniscript</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-markdown</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-macro</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-lua</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-lipsum</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-latex</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-insertnum</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-gproject</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-geniuspaste</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-gendoc</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-extrasel</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-doc</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-devhelp</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-debugger</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-commander</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-codenav</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-plugin-addons</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-common</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd"> |deb-gview</span> </p>
+    <p class="Textbody">Все приведённые выше внутренние команды дают информацию как об установленных пакетах, так и о пакетах, доступных в подключённых репозиториях. А вот команды contains и content работают только для установленных пакетов. Первая позволяет определить, к какому пакету принадлежит данный файл — именно таким способом была определена выше принадлежность утитлиты apt:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt contains /usr/local/bin/apt</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">mintsystem: /usr/local/bin/apt</span> </p>
+    <p class="Textbody">А команда content выводит список всех файлов пакета с указанием их положения в файловой иерархии:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt content mintsystem</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/apt</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/apt/preferences.d</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/apt/preferences.d/official-extra-repositories.pref</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/bash_completion.d</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/bash_completion.d/apt-linux-mint</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/init.d</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/etc/init.d/mintsystem</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/usr/share/nemo</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">/usr/share/nemo/actions</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">/usr/share/nemo/actions/mint-md5sum.nemo_action</span> </p>
+    <p class="Textbody">Наконец, последняя из «информационных» команд — policy. При указании в качестве аргумента имени установленного пакета она выводит такую о нём информацию:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt policy mintsystem</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">mintsystem:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Установлен: 7.9.7</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Кандидат:   7.9.7</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Таблица версий:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> *** 7.9.7 0</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">        700 http://linux-mint.froonix.org/ rebecca/main amd64 Packages</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">        100 /var/lib/dpkg/status</span> </p>
+    <p class="Textbody">А для пакета не установленного она будет такой:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt policy geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">geany:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Установлен: (отсутствует)</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Кандидат:   1.23.1+dfsg-1</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Таблица версий:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">     1.23.1+dfsg-1 0</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">        500 http://gd.tuwien.ac.at/opsys/linux/ubuntu/archive/ trusty/universe amd64 Packages</span> </p>
+    <p class="Textbody">Где числе перед URL — приоритет репозитория, в который входит пакет, оно берётся из файлов каталога /etc/apt/preferences.d. Большее число соовтетствует более высокому приоритету.</p>
+    <p class="Textbody">Внутренняя команда policy была придумана для утилиты apt-cache дистрибутива Debian, где использовалась для управления приоритетами при совмещёнии в одной системе пакетов из его многочисленных веток — stable, testing, unstable, experimental. Не уверен, что она востребована в дистрибутиве Mint.</p>
+    <h3 id="toc136"><a id="RefHeading17141713816058"></a><a id="bkmRefHeading17141713816058"></a><a id="toc135"></a><a id="bkmtoc135"></a><a id="RefHeading5481136957987"></a><a id="bkmRefHeading5481136957987"></a><a id="bkmRefHeading5481136957987"></a><a id="bkmbkmRefHeading5481136957987"></a>Работа с бинарными пакетами</h3>
+    <p class="Textbody">Главное действие в отношении пакетов, которые были сочтены полезными — их установка. А основным инструментом установки является внутренняя команда install. В качестве аргументов она принимает имена пакетов — те самые, которые были найдены командой apt search и в полезности которых можно было убедиться командой apt show. Например, для установки чрезвычайно полезного текстового редактора Geany следует дать команду</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt install geany</span> </p>
+    <p class="Textbody">которая сначала запросит пароль пользователя с административным типом аккаунта:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">[sudo] password for alv:</span> </p>
+    <p class="Textbody">А затем, после считывания локального списка пакетов и построения дерева зависимостей, сообщит о необходимости таковых, объёме скачиваемых пакетов и увеличении занятого дискового пространства после установки, запросив подтверждение серьёзности намерений:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение списков пакетов… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Построение дерева зависимостей</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение информации о состоянии… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Будут установлены следующие дополнительные пакеты:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">НОВЫЕ пакеты, которые будут установлены:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany geany-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">обновлено 0, установлено 2 новых пакетов, для удаления отмечено 0 пакетов, и 37 пакетов не обновлено.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Необходимо скачать 3808 kБ архивов.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">После данной операции, объём занятого дискового пространства возрастёт на 9872 kB.</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Хотите продолжить? [Д/н]</span> </p>
+    <p class="Textbody">Согласие предполагается по умолчанию, так что тут достаточно нажать Enter. После чего начинается скачивание пакетов из содержащего их репозитория, распаковка и инкорпорация компонентов в файловую иерархию, а также регистрация в базе данных и включение, если требуется, исполняемого файла в главное меню (для Geany — в секцимю Прграммирование, так как эта программа позиционируется её авторами как IDE — Integrated Development Environment, то есть интегрированная среда разработки). Основной статус пакета geany изменится на «установленный»:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt search geany | head -n 1</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">i   geany           - Небольшая и быстрая IDE</span> </p>
+    <p class="Textbody">А пакет geany-common приобретёт ещё и статус автоматически установленного:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt search geany-common</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">i A geany-common    - Небольшая и быстрая IDE — общие файлы</span> </p>
+    <p class="Textbody">Если в системе уже был установлен данный пакет более старой версии — он будет обновлён. А вот переустановить пакет той же версии (например, если он был безнадёжно испорчен в ходе экспериментов) команда install откажется, сообщив, что</p>
+    <p class="Textbody"><span style="background-color:#dddddd">Уже установлена самая новая версия geany.</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">обновлено 0, установлено 0 новых пакетов, для удаления отмечено 0 пакетов, и 37 пакетов не обновлено.</span> </p>
+    <p class="Textbody">Однако на этот предмет существует специальная команда reinstall, аргументом которой указывается установленный пакет, нуждающийся в исправлении.</p>
+    <p class="Textbody">Локально отдельные пакеты могут быть установлены с помощью внутренней команды deb, аргументом которой должно быть полное имя файла пакета, если нужно, с указанием пути. Например, команда</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt deb sublime-text_3065_amd64.deb</span> </p>
+    <p class="Textbody">установит текстовый редактор Sublime — разумеется, предварительно файл этого пакета должен быть скачан.</p>
+    <p class="Textbody">Поскольку внутренняя команда deb — полный эквивалент конструкции sudo dpkg -i, она не занимается разрешением зависимостей, а только сообщает об их нарушении. Например, попытка установить в окружении Cinnamon файловый менджер Caja из среды MATE вызовет следующие сообщения:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt deb caja_1.8.2-0+rebecca_amd64.deb</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Выбор ранее не выбранного пакета caja.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">(Чтение базы данных … на данный момент установлен 188621 файл и каталог.)</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Preparing to unpack caja_1.8.2-0+rebecca_amd64.deb ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Unpacking caja (1.8.2-0+rebecca) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">dpkg: зависимости пакетов не позволяют настроить пакет caja:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> caja зависит от libcaja-extension1 (= 1.8.2-0+rebecca), однако:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Пакет libcaja-extension1 не установлен.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> caja зависит от libmate-desktop-2-17, однако:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Пакет libmate-desktop-2-17 не установлен.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> caja зависит от mate-desktop, однако:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Пакет mate-desktop не установлен.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> caja зависит от caja-common (= 1.8.2-0+rebecca), однако:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  Пакет caja-common не установлен.</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">dpkg: error processing package caja (--install):</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> проблемы зависимостей — оставляем не настроенным</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Processing triggers for man-db (2.6.7.1-1ubuntu1) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Processing triggers for mime-support (3.54ubuntu1.1) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Processing triggers for gnome-menus (3.10.1-0ubuntu2) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Processing triggers for desktop-file-utils (0.22-1ubuntu1) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Processing triggers for ubuntu-system-adjustments (2014.11.19) ...</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">При обработке следующих пакетов произошли ошибки:</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd"> caja</span> </p>
+    <p class="Textbody">В отличие от внутренней команды install, команда deb не только обновит пакет до более новой версии, но и переустановит его версию текущую.</p>
+    <p class="Textbody">Установленные пакеты иногда требуется и удалять. Этой цели в apt для Mint служат две внутренние команды — remove и purge, аргументами которых служат, очевидно, имена удаляемых пакетов. Первая удаляет файлы пакета, но сохраняет его общесистемные конфиги, вторая — удаляет также и их. Различие между ними отражается в основном статусе удалённого пакета — в первом случае его значение будет c, во втором — p, как и у пакетов, которые никогда не устанавливались.</p>
+    <p class="Textbody">И remove, и purge автоматически удаляют все зависимые пакеты, список их выводится после ввода пользовательского пароля:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt purge libreoffice-impress</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">[sudo] password for alv:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение списков пакетов… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Построение дерева зависимостей</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение информации о состоянии… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Пакеты, которые будут УДАЛЕНЫ:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  libreoffice-impress* libreoffice-ogltrans*</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  libreoffice-presentation-minimizer*</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">обновлено 0, установлено 0 новых пакетов, для удаления отмечено 3 пакетов, и 5 пакетов не обновлено.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">После данной операции, объём занятого дискового пространства уменьшится на 6031 kB.</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Хотите продолжить? [Д/н]</span> </p>
+    <p class="Textbody">Список удаляемых пакетов нужно читать очень внимательно, чтобы случайно не удалить что-нибудь жизненно необходимое.</p>
+    <p class="Textbody">Пакеты, от которых зависит удаляемый, автоматически не удаляются ни remove, ни purge. В этом случае apt предлагает воспользоваться внутренней командой autoremove для очистки системы от «осиротелых» зависимостей:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt purge geany</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение списков пакетов… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Построение дерева зависимостей</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение информации о состоянии… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Следующий пакет устанавливался автоматически и больше не требуется:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany-common</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Для его удаления используйте «apt-get autoremove».</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Пакеты, которые будут УДАЛЕНЫ:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  geany*</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">обновлено 0, установлено 0 новых пакетов, для удаления отмечено 1 пакетов, и 5 пакетов не обновлено.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">После данной операции, объём занятого дискового пространства уменьшится на 2671 kB.</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Хотите продолжить? [Д/н]</span> </p>
+    <p class="Textbody">Разумеется, в нашем случае мы обращаемся не к команде apt-get, всё в той же утилите apt для Mint:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt autoremove</span> </p>
+    <p class="Textbody">Она не нуждается в аргументах и выполняет свою работу молча, не задавая вопросов. Перед её выполнением не вредно выполнить другую внутреннюю команду — check, проверяющую систему на предмет «сломанных» зависимостей.</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">apt check</span> </p>
+    <p class="Textbody">[~]<br />Что при хорошем раскладе после ввода пароля должно дать такой результата:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение списков пакетов… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Построение дерева зависимостей</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Чтение информации о состоянии… Готово</span> </p>
+    <p class="Textbody">А при плохом... плохого у меня до сих пор не было.</p>
+    <p class="Textbody">Перед установкой пакетов из репозитория они предварительно скачиваются и помещаются в каталог /var/cache/apt/archives/. Со временем файлов пакетов накапливается много, а нужны они бывают только в исключительных случаях. Для избавления от них существуют в apt для Mint предусмотрены команды autoclean и clean. Первая удаляет из кеша только пакеты устаревших версий, сохраняя те, версии которых установлены в системе. Вторая же полностью очищает каталог /var/cache/apt/archives/.</p>
+    <h3 id="toc137"><a id="RefHeading17161713816058"></a><a id="bkmRefHeading17161713816058"></a><a id="toc136"></a><a id="bkmtoc136"></a><a id="RefHeading5501136957987"></a><a id="bkmRefHeading5501136957987"></a><a id="bkmRefHeading5501136957987"></a><a id="bkmbkmRefHeading5501136957987"></a>Обновление системы</h3>
+    <p class="Textbody">Сказанное выше касалось единичных пакетов или их серий — любая из перечисленных субкоманд принимает любое количество аргументов. Однако в утилите apt предусмотрены и внутренние команды для общего обновления пакетов, а также для тотального системы. Однако, прежде чем выполнить любую из них, необходимо провести обновление локального кеша пакетов, то есть получить списки новых и обновлённых пакетов. Делается это внутренней командой update:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt update</span> </p>
+    <p class="Textbody">Её же в обязательном порядке следует выполнять после каждого изменения в репозиториях — подключения новых или отключения имевшихся. Теоретически для редактирования списков репозиториев в apt для Mint предназначена команда sources. Однако практически она бесполезна, так как вызывает текстовый редактор по умолчанию (nano) для редактирования /etc/apt/sources.list. В нашем же дистрибутиве этот файл содержит только репозиторий локального оптического диска, а все реально подключённые репозитории описываются в файлах каталога /etc/apt/sources.list.d.</p>
+    <p class="Textbody">Для обновления всех, по возможности, пакетов установленной системы в apt для Mint существует внутренняя команда upgrade. Она выявит все пакеты, для которых в репозиториях доступны более свежие версии, выведет их список, объём для скачивания и прирост объёма занятого дискового пространства после выполнения процедуры, а также запросит подтвержения:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">$ apt upgrade</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение списков пакетов… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Построение дерева зависимостей</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Чтение информации о состоянии… Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Расчёт обновлений…Готово</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Пакеты, которые будут обновлены:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">  gir1.2-gudev-1.0 libegl1-mesa libegl1-mesa-drivers libgbm1</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">…</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">обновлено 35, установлено 0 новых пакетов, для удаления отмечено 0 пакетов, и 0 пакетов не обновлено.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Необходимо скачать 36,3 MБ архивов.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">После данной операции, объём занятого дискового пространства возрастёт на 124 kB.</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">Хотите продолжить? [Д/н]</span> </p>
+    <p class="Textbody">В ходе выполнения upgrade обновляются по возможности все пакеты, за исключением тех, для разрешения зависимостей которых обновление потребует доустановки новых пакетов или удаления существующих. Для таких пакетов текущие версии будут сохранены.</p>
+    <p class="Textbody">При использовании команды upgrade следует учитывать, что она обновляет в том числе и те компоненты, которые по умолчанию заблокированы для обновления через фирменный инструмент mintupdate — ядро и всё, что с ним связано, glibc, и так далее (пакеты уровней 4 и 5). Так что, прежде чем применять эту команду, следует либо всё взвесить и решиться на обновление указанных компонентов, либо явным образом зафиксировать их версии.</p>
+    <p class="Textbody">Фиксация версий пакетов может потребоваться и в ряде других случаев — например, при использовании более неподдерживаемых, но по прежнему необходимых пакетов, пакетов, пересобранных с собственными опциями, и ещё некоторых. Она выполняется внутренней командой hold с указанием имени фиксируемого пакета (пакетов). После чего пакет приобретает основной статус h и не затрагивается обновлениями. Обратная процедура, то есть снятие фиксации, если в ней пропала необходимость, выполняется внутренней командой unhold.</p>
+    <p class="Textbody">Для тотального обновления системы предназначена внутренняя команда dist-upgrade: она не только обновляет все пакеты, для которых обновления доступны, но может доустанавливать новые пакеты и удалять существующие, если это необходимо для разрешения зависимостей. Эта субкоманда применяется, например, при смене релиза дистрибутива — например, для перехода с Mint 17.0 Qiana на 17.1 Rebecca достаточно прописать одноимённые репозитории в файлах их описаний. И после этого дать команду</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ apt dist-upgrade</span> </p>
+    <p class="Textbody">Есть и ещё несколько случаев, требующих применения dist-upgrade, а не просто upgrade — например, обновление версии рабочей среды (в данном случае Cinnamon) и некоторых других базовых компонентов системы.</p>
+    <p class="Textbody">При тотальном обновлении через dist-upgrade следует помнить о том, что выше было сказано про upgrade. И если в данном случае обновление базовых компонентов системы (ядра etc.) необходимо, то о фиксации самосборных и неподдерживаемых пакетов посредством команды hold нужно позаботиться заблаговременно.</p>
+    <p class="Textbody">В apt для Mint предусмотрена ещё одна внутренняя команда общего обновления — dselect-upgrade, эквивалентная конструкции sudo apt-get dselect-upgrade. Она выполняет обновление в соответствие со статусом пакетов, установленным по умолчанию для древней утилиты dselect — предшественницы aptitude. Поскольку самой этой утилиты в стандартной инсталляции Mint нет, изменить (и даже посмотреть эти умолчания затруднительно). Так что я бы воздержался от использования dselect-upgrade, тем более что ни малейшей необходимости обращаться к ней нет.</p>
+    <h3 id="toc138"><a id="RefHeading17181713816058"></a><a id="bkmRefHeading17181713816058"></a><a id="toc137"></a><a id="bkmtoc137"></a><a id="RefHeading5521136957987"></a><a id="bkmRefHeading5521136957987"></a><a id="bkmRefHeading5521136957987"></a><a id="bkmbkmRefHeading5521136957987"></a>Работа с пакетами исходных текстов</h3>
+    <p class="Textbody">Всё сказанное выше относилось к бинарным пакетам. Однако в утилите apt предусмотрены и средства для работы с пакетами исходных текстов. Так, с помощью внтуренней команды source можно просто скачать пакет, указанный в качестве её аргумента — разумеется, для этого должен быть подключён репозиторий исходников. Внутренняя команда build (эквивалент sudo dpkg-buildpackage) выполнит построение бинарного пакета (что требует соответствующего инструментария в установленном виде). А внутренняя команда build-dep ограничится конфигурированием необходимых для этого зависимостей, например:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">apt build-dep ubuntu-zfs</span> </p>
+    <p class="Textbody">Это потребовалось мне в Rebecca 17.1 при сборке пакетов поддержки ZFS on Linux.</p>
+    <h3 id="toc139"><a id="RefHeading17201713816058"></a><a id="bkmRefHeading17201713816058"></a><a id="toc138"></a><a id="bkmtoc138"></a><a id="RefHeading5541136957987"></a><a id="bkmRefHeading5541136957987"></a><a id="bkmRefHeading5541136957987"></a><a id="bkmbkmRefHeading5541136957987"></a>Итог</h3>
+    <p class="Textbody">Можно видеть, что и по части манипулирования пакетами возможности утилиты apt широки и многогранны. То есть это действительно универсальное средство управления пакетами, в обыденной жизни способное почти всегда заменить все прочие — от низкоуровневой dpkg (обращение к которой потребуется только в исключительных случаях) до графического front-end'а — Synaptic'а. Ибо не уступает последнему в наглядности вывода информации о пакетах, позволяя манипулировать ими проще и быстрее. Рядом с apt для Mint его тёзка из одномиённого пакета (общего для всех deb based дистрибутивов) Debian/Ubuntu выглядит ограниченным функционально, а традиционные apt-cache и apt-get — несколько усложнёнными синтаксически. Что же до aptitude, то она в этом контексте кажется вообще излишней: apt для Mint обеспечивает почти все функции её командного режима, а в интерактивном режиме эта программа в дистрибутивах семейства Ubuntu и её клонах уже давно работает не вполне корректно.</p>
+    <h3 id="toc140"><a id="RefHeading17221713816058"></a><a id="bkmRefHeading17221713816058"></a><a id="toc139"></a><a id="bkmtoc139"></a><a id="RefHeading5561136957987"></a><a id="bkmRefHeading5561136957987"></a><a id="bkmRefHeading5561136957987"></a><a id="bkmbkmRefHeading5561136957987"></a>Примечание: кратко об apt из APT</h3>
+    <p class="Textbody">Если apt-cache и apt-get полностью заменяются утилитой apt для Mint, то, как ни странно, apt из одноимённого пакета имеет некоторые дополнительные функции, и потому заслуживает хоть и краткого, но рассмотрения. Как уже говорилось, в нашем дистрибутиве его следует запускать с указанием полного пути:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ /usr/bin/apt</span> </p>
+    <p class="Textbody">В приведённом виде эта команда выведет справку о внутренних командах этой утилиты — краткую, но вполне достаточную:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">CLI for apt.</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">Basic commands:</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> list - list packages based on package names</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> search - search in package descriptions</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> show - show package details</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> update - update list of available packages</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> install - install packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> remove  - remove packages</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> upgrade - upgrade the system by installing/upgrading packages</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd"> full-upgrade - upgrade the system by removing/installing/upgrading packages</span> </p>
+    <p class="Textbody"> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd"> edit-sources - edit the source information file</span> </p>
+    <p class="Textbody">Назначение большинства внутренних команд понятно без комментариев, из их имён и сопуствующих пояснений: search, show, install, remove, update и upgrade суть аналоги одноимённых внутренних команд apt для Mint (а также apt-cache и apt-search), full-upgrade идентична команде dist-upgrade, а edit-sources — команде sources.</p>
+    <p class="Textbody">Так что единственной внутренней командой, не имеющей аналогов ни в связке apt-cache и apt-search, ни в apt для Mint, оказывается list. Но зато командой очень полезной:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">с опцией --installed она выводит список установленных пакетов (который иначе можно получить только командой dpkg -l или всякими конструкциями с grep); </p>
+      </li>
+      <li>
+        <p class="Textbody">опция --upgradable выводит список пакетов, для которых имеются обновления; </p>
+      </li>
+      <li>
+        <p class="Textbody">опция же --all-versions выдаёт на гора полный список доступных пакетов, специально отмечая установленные. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Тот же результат достигается командой</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ /usr/bin/apt list</span> </p>
+    <p class="Textbody">без всяких опций. Так что внутренняя команда list в ряде случаев оказывается востребованной, почему я и придумал для неё специальный глобальный псевдоним в конфиге ~/.zshrc.</p>

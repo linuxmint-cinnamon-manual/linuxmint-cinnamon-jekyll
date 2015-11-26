@@ -1,0 +1,254 @@
+    <h2 id="toc126"><a id="RefHeading16941713816058"></a><a id="bkmRefHeading16941713816058"></a><a id="toc125"></a><a id="bkmtoc125"></a><a id="RefHeading12741136957987"></a><a id="bkmRefHeading12741136957987"></a><a id="bkmRefHeading12741136957987"></a><a id="bkmbkmRefHeading12741136957987"></a>Управление пакетами</h2>
+    <p class="Textbody">Работа с пакетами предполагает следующие действия — их установку с занесением в локальную базу данных, отслеживание зависимостей (и иногда их разрешение) обновление, удаление, получение информации о пакетах, иногда конфигурирование. Для понимания сути их необходимо дать</p>
+    <h3 id="toc127"><a id="RefHeading16961713816058"></a><a id="bkmRefHeading16961713816058"></a><a id="toc126"></a><a id="bkmtoc126"></a><a id="RefHeading5321136957987"></a><a id="bkmRefHeading5321136957987"></a><a id="bkmRefHeading5321136957987"></a><a id="bkmbkmRefHeading5321136957987"></a>Терминологическое введение</h3>
+    <p class="Textbody">В системах пакетного менеджмента deb based дистрибутивов, в том числе и в Mint, пакеты объединяются в категории, секции и группы. Список категорий включает следующие пункты:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">Установленные пакеты — очевидно из названия; </p>
+      </li>
+      <li>
+        <p class="Textbody">Обновляемые пакеты — установленные пакеты, для которых в репозитории доступны более новые версии; </p>
+      </li>
+      <li>
+        <p class="Textbody">New Packages — пакеты, добавленные в локальный кэш  после последней его очистки; </p>
+      </li>
+      <li>
+        <p class="Textbody">Неустановленные пакеты — пакеты, отсутствующие в системе, но доступные из репозиториев; </p>
+      </li>
+      <li>
+        <p class="Textbody">Виртуальные пакеты — не существующие пакеты, указывающие на другие пакеты, которые нужно использовать или которые предоставляют схожие функции.; </p>
+      </li>
+      <li>
+        <p class="Textbody">Задачи (Tasks) — группы пакетов (метапакеты), которые предоставляют лёгкий способ выбора заранее сформированного набора пакетов под определённую цель. </p>
+      </li>
+    </ul>
+    <p class="Textbody">В секции пакеты группируются по назначению: программы для администрирования, базовые пакеты, текстовые редакторы, и так далее.</p>
+    <p class="Textbody">Группы представляющие собой разделы официального репозитория. В Mint они таковы: main, upstream, import, backport, romeo.</p>
+    <p class="Textbody">Каждый пакет в терминологии имеет основной статус, обозначаемый строчной литерой; в их число входят:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">i (от install) — установленный пакет; </p>
+      </li>
+      <li>
+        <p class="Textbody">p (от purge) — пакет не установленный или деинсталлированный «вчистую» (то есть с удалением его конфигурационных файлов); </p>
+      </li>
+      <li>
+        <p class="Textbody">c (от clean) — пакет, деинсталлированный с сохранением конфигурационных файлов; </p>
+      </li>
+      <li>
+        <p class="Textbody">v (от virtual) — виртуальный пакет. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Кроме того, пакеты могут иметь один из следующих дополнительных статусов, хотя это и не обязательно:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">A (от Auto) — установленный автоматически, как зависимость другого пакета; пакеты, не имеющие статуса A, считаются установленными вручную; </p>
+      </li>
+      <li>
+        <p class="Textbody">h (от hold) — пакет с фиксированной версией (то есть не подверженный апгрейду); </p>
+      </li>
+      <li>
+        <p class="Textbody">u (от unpacked) — пакет распакованный, но не установленный; </p>
+      </li>
+      <li>
+        <p class="Textbody">H — «недоустановленный» пакет; </p>
+      </li>
+      <li>
+        <p class="Textbody">C — пакет установленный, но не настроенный; </p>
+      </li>
+      <li>
+        <p class="Textbody">B — «сломанный» пакет, то есть установленный с нарушением зависимостей. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Обращаю особое внимание на пакеты, имеющие статус A: они устанавливаются вместе со своими зависимостями и могут быть удалены только вместе с ними. Правда, как мы увидим дальше, статус установленного пакета может быть изменён, и тогда он станет доступным для индивидуального удаления.</p>
+    <p class="Textbody">В сущности, все действия по управлению пакетами в Mint сводятся к изменению их статуса. И делается это с помощью инструментов текстового режима (утилиты dpkg и apt) или графических фронт-эндов (Менеджер программ и Synaptic).</p>
+    <h3 id="toc128"><a id="RefHeading16981713816058"></a><a id="bkmRefHeading16981713816058"></a><a id="toc127"></a><a id="bkmtoc127"></a><a id="RefHeading5341136957987"></a><a id="bkmRefHeading5341136957987"></a><a id="bkmRefHeading5341136957987"></a><a id="bkmbkmRefHeading5341136957987"></a>Средства для работы с пакетами. Обзор</h3>
+    <p class="Textbody">Инструментарий для работы с пакетами можно разделить на пять групп:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">установщики пакетов; </p>
+      </li>
+      <li>
+        <p class="Textbody">оболочки для них; </p>
+      </li>
+      <li>
+        <p class="Textbody">менеджеры пакетов; </p>
+      </li>
+      <li>
+        <p class="Textbody">их графические фронт-энды; </p>
+      </li>
+      <li>
+        <p class="Textbody">центры приложений. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Первая группа — это низкоуровневые утилиты для работы с единичными пакетами: их установки, удаления, etc. В нашем случае эту роль выполняет семейство утилит dpkg. Отслеживание зависимостей здесь выполняется на уровне удовлетворения или неудовлетворения, попыток автоматического разрешения зависимостей не предпринимается. Семейство это не уникально для Mint, а присутствует во всех дистрибутивах, использующих deb-формат пакетов.</p>
+    <p class="Textbody">Оболочки для установщиков пакетов выполняют те же самые функции, что и они сами, но посредством не прямых команд, а графического интерфейса. В Mint такой оболочкой для dpkg является Gdebi.</p>
+    <p class="Textbody">Менеджеры пакетов работают уже не с единичными пакетами, а с их репозиториями. И, кроме перечисленных функций, их непременной обязанностью является не только отслеживание зависимостей, но и их автоматическое, по возможности, разрешение. В большинстве deb based дистрибутивов эту роль выполняет семейство утилит APT. Однако в Mint имеется собственная реализация такого инструмента в лице интегрированной утилиты apt — её следует чётко отличать от одноимённой команды из обще-Debian'овского APT-семейства.</p>
+    <p class="Textbody">Четвёртая группа — графические фронт-энды для менеджеров пакетов. В Mint она представлена программой Synaptic.</p>
+    <p class="Textbody">Что же касается пятой группы — это самые высокоуровневые программы, в которых прозрачно для применителя интегрированы функции поиска пакетов в Сети, подключения к содержащим их репозиториями и собственно пакетный менеджмент. Название её заимствовано от Центра приложений Ubuntu — первого представителя этой группы. В Mint её аналогом выступает Менеджер программ, о котором говорилось в очерке про фирменные утилиты этого дистрибутива. Остальные же инструменты работы с пакетами будут рассмотрены в ближайших очерках.</p>
+    <h3 id="toc129"><a id="RefHeading17001713816058"></a><a id="bkmRefHeading17001713816058"></a><a id="toc128"></a><a id="bkmtoc128"></a><a id="RefHeading5361136957987"></a><a id="bkmRefHeading5361136957987"></a><a id="bkmRefHeading5361136957987"></a><a id="bkmbkmRefHeading5361136957987"></a>Установщик пакетов dpkg</h3>
+    <p class="Textbody">Утилиты семейства dpkg, предназначенные для работы с единичными deb-пакетами, были исторически первым средством автоматического развертывания пакетов, учитывающим их зависимости. Они лежат в фундаменте всех надстраивающих их систем (apt, synaptic, mintinstall. В ряде случаев dpkg оказывается наиболее простым средством для установки или удаления пакета, а также получения информации о нем. Кроме того, одна из утилит семейства, dpkg-reconfigure, с которой мы сталкивались во время доводки текстовой консоли, оказывается незаменимой при настройке пакетов установленных.</p>
+    <p class="Textbody">Вообще, возможности утилит семейства (см. man (1) dpkg) очень широки, и потому заслуживают рассмотрения, хотя бы в минимально необходимом для применителя объёме. Наиболее употребимы из них — следующие:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">собственно dpkg — средство для установки и удаления программ; </p>
+      </li>
+      <li>
+        <p class="Textbody">dpkg-query — инструмент создания запросов к базе данных deb-пакетов; </p>
+      </li>
+      <li>
+        <p class="Textbody">dpkg-reconfigure — программа для настройки установленных пакетов. </p>
+      </li>
+    </ul>
+    <p class="Textbody">А вообще это семейство включает в себя около 25 утилит — полный их список можно просмотреть таким образом:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">ls /usr/sbin/dpkg* /usr/bin/dpkg*</span> </p>
+    <p class="Textbody">Утилиты эти входят в состав пакетов dpkg и dpkg-dev; первый, предназначенный для основных действий с бинарными пакетами, устанавливается по умолчанию в ходе первичной инсталляции; второй же, включающий утилиты для манипуляции с пакетами исходников, должен быть установлен дополнительно (или устанавливается как зависимость при инсталляции deb-специфичного сборочного инструментария).</p>
+    <p class="Textbody">Для начала рассмотрим установку пакетов. Итак, если нам необходимо установить единичный пакет, поступаем так:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ dpkg -i path2/packagename.deb</span> </p>
+    <p class="Textbody">и дело в шляпе — через считанные мгновения пакет packagename.deb будет установлен: это обеспечивает опция -i (от install) вслед за командой dpkg. Дабы в дальнейшем не повторяться, замечу, что все действия по установке и удалению пакетов требуют полномочий администратора, приобретаемых временно командой sudo.</p>
+    <p class="Textbody">Разумеется, успешной установка пакета будет только при соблюдении следующих условий:</p>
+    <ol style="margin-top:0;margin-bottom:0;list-style-type:decimal;clear:left">
+      <li>
+        <p class="Textbody">физическом наличии его в пределах досягаемости с локальной машины (на подключенной файловой системе, смонтированном компакт-диске или ином носителе); </p>
+      </li>
+      <li>
+        <p class="Textbody">знании точного пути (path2) к нужному файлу пакета (имя его, кстати, должно быть указано полностью); </p>
+      </li>
+      <li>
+        <p class="Textbody">отсутствии неудовлетворенных зависимостей. </p>
+      </li>
+    </ol>
+    <p class="Textbody">Из первого условия следует, что dpkg удобно использовать при доустановке компонентов с инсталляционного CD/DVD (или установке заблаговременно скачанных пакетов). Второе условие самоочевидно. Ну а третье также выполнимо без особого труда: в случае нарушения зависимостей dpkg выдаст сообщение об ошибке с полным перечнем того, что нужно установить для ее устранения, причём в списке будут перечислены только обязательные зависимости. И достаточно все необходимые пакеты поместить в командную строку:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo dpkg -i path2/packagename1.deb … path2/packagename#.deb</span> </p>
+    <p class="Textbody">для того, чтобы они были установлены единой операцией (если, конечно, все эти пакеты имеются в наличии).</p>
+    <p class="Textbody">Другое часто требующееся применение команды dpkg — удаление ненужных пакетов. Это делается двояко: команда</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo dpkg -r packagename</span> </p>
+    <p class="Textbody">удалит пакет, но сохранит настроечные его файлы, а команда</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo dpkg -P packagename</span> </p>
+    <p class="Textbody">произведет полную очистку системы от всех компонентов пакета (кроме конфигурационных файлов в домашнем каталоге пользователя — от них в любом случае придется избавляться вручную). Правда, только если он не связан зависимостями с другими пакетами — в этом случае последует сообщение о невозможности удаления пакета и выведен список его зависимостей, этому препятствующих.</p>
+    <p class="Textbody">Обратим внимание — в аргументах обеих команд фигурирует уже не полное имя пакета, а только его базовая часть. Это распространяется на все случаи использования dpkg (и других команд ее семейства), когда речь идет об уже установленных пакетах.</p>
+    <p class="Textbody">Следующая сфера деятельности команд семейства dpkg — получение информации о пакетах. И здесь первое дело — это получение списка пакетов, установленных в системе:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ dpkg -l</span> </p>
+    <p class="Textbody">Что в моей системе даёт примерно такой вывод:</p>
+    <p class="Textbody"><span style="background-color:#dddddd">ii  accountsservice 0.6.35-0ubuntu7.1 amd64 query and manipulate user account information</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">ii  acl 2.2.52-1 amd64 Access control list utilities</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">…</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">ii  zsh 5.0.2-3ubunt amd64 shell with lots of features</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">ii  zsh-common 5.0.2-3ubunt all architecture independent files for Z</span> </p>
+    <p class="Textbody"><span style="background-color:#dddddd">ii  zsh-doc 5.0.2-3ubunt all zsh documentation - info/HTML format</span> </p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">ii  zsh-lovers 0.8.3-0ubunt all tips, tricks and examples for the zs</span> </p>
+    <p class="Textbody">До появления интегрированной утилиты apt команда dpkg -l была чуть ли не единственным способом получения списка установленных пакетов. Или, по крайней мере, самым простым.</p>
+    <p class="Textbody">Для уже установленных пакетов информацию о них проще всего получить с помощью команды dpkg-query, требующей указания какого-либо из операторов действия и имени пакета в качестве аргумента. Операторы действия команды dpkg-query можно вывести так (поскольку получение информации о пакетах никак не влияет на систему в целом, необходимости в правах администратора тут не возникает):</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ dpkg-query --help</span> </p>
+    <p class="Textbody">Они следующие:</p>
+    <ul style="margin-top:0;margin-bottom:0;list-style-type:disc;clear:left">
+      <li>
+        <p class="Textbody">-s или --status — вывод детального статуса пакета, включающий: </p>
+        <ul style="margin-top:0;margin-bottom:0;list-style-type:bullet;clear:left">
+          <li>
+            <p class="Textbody">имя пакета, собственно статус (установлен ли он) и приоритет; </p>
+          </li>
+          <li>
+            <p class="Textbody">секция репозитория, к которой пакета относится (например, editors — для текстовых редакторов); </p>
+          </li>
+          <li>
+            <p class="Textbody">размер пакета в установленном виде; </p>
+          </li>
+          <li>
+            <p class="Textbody">имя майнтайнера, архитектура, для которой пакет собран, и номер версии; </p>
+          </li>
+          <li>
+            <p class="Textbody">описание зависимостей и конфликтов; </p>
+          </li>
+          <li>
+            <p class="Textbody">краткое (в один абзац) описание пакета. </p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p class="Textbody">-p или --print-avail — практически то же самое, но в форме, приспособленной для печати; </p>
+      </li>
+      <li>
+        <p class="Textbody">-l или --list — тоже своего рода описание статуса, включающее сведения о том, установлен ли пакет, нуждается ли он в обновлении, нет ли ошибок в его настройке, и так далее; </p>
+      </li>
+      <li>
+        <p class="Textbody">-W или --show — просто вывод номера версии в форме: </p>
+        <p class="Textbody"><span style="background-color:#dddddd"> $ dpkg-query -W nano</span> </p>
+        <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">nano    1.3.8-2</span> </p>
+      </li>
+      <li>
+        <p class="Textbody">-L или --listfiles — полный список файлов, относящихся к данному пакету, в форме: </p>
+        <p class="Textbody"><span style="background-color:#dddddd"> /.</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/etc</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/etc/nanorc</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/usr</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/usr/share</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/usr/share/doc</span> </p>
+        <p class="Textbody"><span style="background-color:#dddddd">/usr/share/doc/nano</span> </p>
+        <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">…</span> </p>
+        <p class="Textbody">и так далее (пример для текстового редактора nano);</p>
+      </li>
+      <li>
+        <p class="Textbody">-S или --search — поиск пакета, к которому относится некий файл, указанный в качестве аргумента; может выполнить и обратную задачу — поиск всех файлов, принадлежащих данному пакету, вывод в этом случае оказывается аналогичным dpkg-query -L. </p>
+      </li>
+    </ul>
+    <p class="Textbody">Повторю, что все сказанное о информации по пакетам, относится к пакетам уже установленным. Для получения же сведений о неустановленных пакетах удобнее использовать графическую оболочку GDebi, о которой будет говориться в следующем разделе.</p>
+    <p class="Textbody">ещё одна важная задача утилит dpkg — выполнение настройки отдельных, уже установленных, пакетов. Предназначенная для этого команда так и называется — dpkg-reconfigure, и запускается таким образом:</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo dpkg-reconfigure packagename</span> </p>
+    <p class="Textbody">После этого вызывается диалоговая программа конфигурации — debconf, и ответы на серию более или менее тривиальных вопросов позволяют добиться желаемого результата. Каковы эти вопросы — зависит от настраиваемой программы. В частности, ранее dpkg-reconfigure была использована для настройки экранных шрифтов в консоли.</p>
+    <h3 id="toc130"><a id="RefHeading17021713816058"></a><a id="bkmRefHeading17021713816058"></a><a id="toc129"></a><a id="bkmtoc129"></a><a id="RefHeading5381136957987"></a><a id="bkmRefHeading5381136957987"></a><a id="bkmRefHeading5381136957987"></a><a id="bkmbkmRefHeading5381136957987"></a>Установщик пакетов GDebi</h3>
+    <p class="Textbody">GDebi представляет собой графический фронт-энд для утилиты dpkg. Она разработана фирмой Canonical специально для Ubuntu и потому, естественно, имеется и в Mint (о котором далее и пойдёт речь). Запустить GDebi можно из секции Администрирование главного меню Cinnamon — но тогда придётся обратиться к пункту File -&gt; Open её меню, и потом долго рыскать по файловому древу в поисках нужного имени. Так что более простой способ её запуска — клик на имени deb-файла в файловом менеджере Nemo. Что представит такую картинку:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_01.png">
+        <img alt="Изображение257" class="frameGraphics" id="257graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_01.png" style="border:1.0px solid #000080;padding:0;width:551.84px;height:401.83054px" />
+      </a>
+      <a id="a257graphic"></a>
+      <a id="bkm257graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_01.png"> </a>
+    </p>
+    <p class="Textbody">Самая ценная информация здесь — это список файлов, входящих в состав пакета. В отличие от Synaptic'а, о котором речь пойдёт со временем, GDebi выводит его даже для не установленных пакетов:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_02.png">
+        <img alt="Изображение258" class="frameGraphics" id="258graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_02-482x572.png" style="border:1.0px solid #000080;padding:0;width:483.8463px;height:573.83685px" />
+      </a>
+      <a id="a258graphic"></a>
+      <a id="bkm258graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_02.png"> </a>
+    </p>
+    <p class="Textbody">В случае, если в пакете всё устраивает, он устанавливается нажатием одноимённой кнопки, что сначала потребует авторизации, а затем незамедлительно начинается установка:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_03.png">
+        <img alt="Изображение259" class="frameGraphics" id="259graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_03-572x191.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:192.82268px" />
+      </a>
+      <a id="a259graphic"></a>
+      <a id="bkm259graphic"></a>
+    </p>
+    <p class="Textbody">Проверка зависимостей, естественно, осуществляется как и в dpkg — на уровне удовлетворённости или неудовлетворённости. В последнем случае выводится сообщение о том, какие пакеты следует установить для их разрешения. По завершении установки картинка становится такой:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_04.png">
+        <img alt="Изображение260" class="frameGraphics" id="260graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_04.png" style="border:1.0px solid #000080;padding:0;width:551.84px;height:401.83054px" />
+      </a>
+      <a id="a260graphic"></a>
+      <a id="bkm260graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_04.png"> </a>
+    </p>
+    <p class="Textbody">Удаление пакета выполняется тем же образом: авторизация и собственно удаление:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_05.png">
+        <img alt="Изображение261" class="frameGraphics" id="261graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_05-572x450.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:451.83374px" />
+      </a>
+      <a id="a261graphic"></a>
+      <a id="bkm261graphic"></a>
+    </p>
+    <p class="Textbody">И завершается возвращением исходной картинки. Если от удаляемого пакета зависит какой-либо другой, то опять же последует сообщение об ошибке:</p>
+    <p class="Textbody">
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_06.png">
+        <img alt="Изображение262" class="frameGraphics" id="262graphic" src="http://alv.me/wp-content/img/im_cin_img/gdebi_06-572x225.png" style="border:1.0px solid #000080;padding:0;width:573.83685px;height:226.83846px" />
+      </a>
+      <a id="a262graphic"></a>
+      <a id="bkm262graphic"></a>
+      <a href="http://alv.me/wp-content/img/2015/01/gdebi_06.png"> </a>
+    </p>
+    <p class="Textbody">Никаких преимуществ против консольного бэк-энда, то есть собственно dpkg, я в GDebi не усмотрел — кроме разве что наглядности. Для установки большого количества пакетов она оказалась неудобной из-за необходимости авторизоваться на каждый такой чих — при использовании dpkg это можно решить один раз командой</p>
+    <p class="Textbody" style="margin-top:0;margin-bottom:17.990553px"><span style="background-color:#dddddd">$ sudo -i</span> </p>
+    <p class="Textbody">А самая востребованная сфера применения GDebi — установка единичного, не отягощённого завимисостями, пакета на предмет «поиграться и стереть». Но в этом отношении ей нет равных…</p>
