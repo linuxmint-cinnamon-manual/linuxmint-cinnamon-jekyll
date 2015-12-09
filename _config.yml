@@ -1,10 +1,12 @@
 ## This content is duplicated here from configs/config_designers.yml because I'm building this site through Github Pages, and Github Pages just looks for the _config.yml file in the root directory to create the build.
-# project definitions
+
+# project definitions (todo: remove this)
 project: doc_designers
 audience: designers
 product: all
 platform: all
 version: all
+
 destination: ../linuxmint-cinnamon
 topnav_title: Linux Mint и его Cinnamon
 homepage_title: Linux Mint и его Cinnamon
@@ -25,6 +27,8 @@ exclude:
   - _site
   - doc_multi*
   - ru/17-1-Rebecca/source/
+  - ru/.git/
+  - .git
 
 # same for all
 host: 127.0.0.1

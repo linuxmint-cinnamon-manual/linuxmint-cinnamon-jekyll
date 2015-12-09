@@ -5,6 +5,11 @@ Online: http://linuxmint-cinnamon-manual.github.io/
 * theme http://idratherbewriting.com/documentation-theme-jekyll/
 * book based on: http://alv.me/wp-content/lib/Alexey_Alv_Fedorchuk_Linux_Mint_i_ego_Cinnamon.html.zip
 
+
+Russian 17.1 version:
+
+* https://github.com/linuxmint-cinnamon-manual/linuxmint-cinnamon-ru/tree/17-1-Rebecca
+
 In `source` folder html source for `markdown`.
 
 `index.md`, `01_about_book.md`, etc - generated from `html` source.

@@ -10,40 +10,40 @@ entries:
           url: /index.html
 
         - title: Об этой книге
-          url: /01_about_book.html
+          url: /010_about_book.html
 
     - title: Введение
       items:
         - title: Введение в Linux Mint
-          url: /02_linux_mint_into.html
+          url: /020_linux_mint_into.html
 
         - title: Введение в Cinnamon
-          url: /03_cinnamon_intro.html
+          url: /030_cinnamon_intro.html
 
     - title: "Linux Mint: установка"
       items:
         - title: "Linux Mint: установка"
-          url: /04_linux_mint_installation.html
+          url: /040_linux_mint_installation.html
 
     - title: "Mint и Cinnamon"
       items:
         - title: "Обзор среды"
-          url: /05_mint_and_cinnamon_obzor.html
+          url: /050_mint_and_cinnamon_obzor.html
 
         - title: Cinnamon и системные настройки
-          url: /06_cinnamon_system_config.html
+          url: /060_cinnamon_system_config.html
 
         - title: Секция Параметры
-          url: /07_section_parameters.html
+          url: /070_section_parameters.html
 
         - title: Секция Оборудование
-          url: /08_devices.html
+          url: /080_devices.html
 
         - title: Секция Администрирование
-          url: /09_admins.html
+          url: /090_admins.html
 
         - title: 'Mint: фирменный инструментарий'
-          url: /10_mint_utils.html
+          url: /100_mint_utils.html
 
         - title: Прочие настройки
-          url: /11_other_config.html
+          url: /110_other_config.html
