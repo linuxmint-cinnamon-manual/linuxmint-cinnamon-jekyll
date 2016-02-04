@@ -15,20 +15,7 @@ layout: default
 
   {{content}}
 
-
-<div class="tags">
-    {% if page.tags != null %}
-    <b>Tags: </b>
-    {% include custom/conditions.html %}
-    {% for tag in page.tags %}
-    {% if projectTags contains tag %}
-    <a href="{{site.project_file_name}}_tag-{{tag}}.html"><button type="button" class="btn btn-primary navbar-btn cursorNorm">{{page.tagName}}{{tag}}</button></a>{% unless forloop.last %}{% endunless%}
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-</div>
-
-{% include disqus.html %}
+  {% render_prev_next {{page.url}}%}
 
 </div>
 
