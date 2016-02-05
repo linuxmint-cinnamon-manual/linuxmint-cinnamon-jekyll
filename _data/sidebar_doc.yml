@@ -47,3 +47,6 @@ entries:
 
         - title: Прочие настройки
           url: /110_other_config.html
+
+        - title: Основы командного интерфейса
+          url: /120_cli_base.html
