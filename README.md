@@ -40,6 +40,8 @@ Then (for Vagrant/shared folder):
 jekyll serve -H 0.0.0.0 - --force_polling
 ```
 
+Open generated: http://0.0.0.0:4003/
+
 Config:
 
 `_config.yml` -- config for jekyll

@@ -50,3 +50,6 @@ entries:
 
         - title: Основы командного интерфейса
           url: /120_cli_base.html
+
+        - title: Утилиты CLI
+          url: /130_cli_utils.html
