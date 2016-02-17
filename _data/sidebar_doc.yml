@@ -53,3 +53,6 @@ entries:
 
         - title: Утилиты CLI
           url: /130_cli_utils.html
+
+        - title: Текстовый редактор nano
+          url: /140_nano.html
