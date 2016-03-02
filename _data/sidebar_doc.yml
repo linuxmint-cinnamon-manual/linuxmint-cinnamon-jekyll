@@ -56,3 +56,6 @@ entries:
 
         - title: Текстовый редактор nano
           url: /140_nano.html
+
+        - title: Mint и Zsh
+          url: /150_mint_and_zsh.html
