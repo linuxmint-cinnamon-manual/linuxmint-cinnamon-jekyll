@@ -13,7 +13,7 @@ Cinnamon - является оригинальной графической ср
 
 Читать:
 
-* [Linux Mint Cinnamon (17.1 Rebecca)](/ru/17-1-Rebecca/index.html)
+* **[Linux Mint Cinnamon (17.1 Rebecca) &rarr;](/ru/17-1-Rebecca/index.html)**
 
 
 Суть данного проекта:
